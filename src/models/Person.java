@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 
-public class Person {
+public class Person implements Serializable{
 	private int personID;
 	private String name;
 	private String username;
@@ -21,7 +22,7 @@ public class Person {
 	    	this.password = sb.toString();
 	    }
 	    catch(Exception e){
-	    	System.out.println("ånei");
+	    	System.out.println("ï¿½nei");
 	    }
 	}
 	/**

@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserGroup {
+public class UserGroup implements Serializable{
     
 	int userGroupID;
 	ArrayList<Person> users = new ArrayList<Person>();
@@ -37,12 +38,11 @@ public class UserGroup {
 	public void setUsers(ArrayList<Person> users) {
 		this.users = users;
 	}
-
-	@Override
-    public String toString() {
-        return "User{" +
-                "userID=" + userGroupID +
-                ", name='" + name + '\'' +
-                '}';
+    
+    @Override
+    public String toString(){
+        return"UserGroup("+
+                "userGroupID: "+ userGroupID +
+                ",name: "+name+ ", members: " + users + ")";
     }
 }

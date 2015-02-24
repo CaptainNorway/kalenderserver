@@ -1,10 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Event {
+public class Event implements Serializable{
     int EventID;
     String name;
     ArrayList<UserGroup> participants;
@@ -73,13 +74,12 @@ public class Event {
 
     @Override
     public String toString() {
-        return "Event{" +
-                "EventID=" + EventID +
-                ", name='" + name + '\'' +
-                ", participants=" + participants +
-                ", date=" + date +
-                ", from=" + from +
-                ", to=" + to +
-                '}';
+        return "Event(" +
+                "EventID: " + EventID +
+                ", date: " + date +
+                ", to: " + to +
+                ", from: " + from +
+                ", participants: " + participants +
+                ')' ;
     }
 }

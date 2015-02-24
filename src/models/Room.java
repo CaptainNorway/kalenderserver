@@ -2,7 +2,7 @@ package models;
 
 import java.io.Serializable;
 
-public class Room implements Serializable{
+public class Room implements Serializable {
     private String roomName;
     private int capasity;
 

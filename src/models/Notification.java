@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Notification {
+public class Notification implements Serializable{
 
 	private ArrayList<UserGroup> receivers;
 	private String note;
