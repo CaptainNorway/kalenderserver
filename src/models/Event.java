@@ -14,8 +14,6 @@ public class Event implements Serializable{
     LocalTime to;
 
     public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDate date, LocalTime from, LocalTime to) {
-
-
         this.EventID = EventID;
         this.name = name;
         this.participants = participants;

@@ -10,7 +10,7 @@ public class Person implements Serializable{
 	private String password;
 	private MessageDigest md;
 	
-	Person(String username, String password){
+	public Person(String username, String password){
 		try{
 	    	md = MessageDigest.getInstance("MD5");    	
 	    	md.update(password.getBytes());

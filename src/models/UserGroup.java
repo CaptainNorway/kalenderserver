@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class UserGroup implements Serializable{
-    
 	int userGroupID;
 	ArrayList<Person> users = new ArrayList<Person>();
     String name;

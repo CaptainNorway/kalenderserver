@@ -10,7 +10,7 @@ public class Notification implements Serializable{
 	private UserGroup sender;
 	private Event event;
 
-	Notification(String note, UserGroup sender, ArrayList<UserGroup> receivers,Event event){
+    public Notification(String note, UserGroup sender, ArrayList<UserGroup> receivers,Event event){
 		this.receivers = receivers;
 		this.sender = sender;
 		this.note = note;
@@ -35,9 +35,7 @@ public class Notification implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Notification [recievers=" + receivers + ", note=" + note
-				+ ", sender=" + sender + ", event=" + event + "]";
+		return "Notification (receivers: " + receivers + ", note: " + note
+				+ ", sender: " + sender + ", event: " + event + ")";
 	}
-	
-	
 }
