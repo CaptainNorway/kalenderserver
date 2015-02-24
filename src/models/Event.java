@@ -10,9 +10,9 @@ public class Event {
     ArrayList<UserGroup> participants;
     LocalDate date;
     LocalTime from;
-    int duration;
+    LocalTime to;
 
-    public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDate date, LocalTime from, int duration) {
+    public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDate date, LocalTime from, LocalTime to) {
 
 
         this.EventID = EventID;
@@ -20,7 +20,7 @@ public class Event {
         this.participants = participants;
         this.date = date;
         this.from = from;
-        this.duration = duration;
+        this.to = to;
     }
 
     public ArrayList<UserGroup> getParticipants() {
@@ -39,12 +39,12 @@ public class Event {
         this.date = date;
     }
 
-    public int getduration() {
-        return duration;
+    public LocalTime getTo() {
+        return to;
     }
 
-    public void setduration(int duration) {
-        this.duration = duration;
+    public void setTo(LocalTime to) {
+        this.to = to;
     }
 
     public LocalTime getFrom() {
@@ -79,7 +79,7 @@ public class Event {
                 ", participants=" + participants +
                 ", date=" + date +
                 ", from=" + from +
-                ", duration=" + duration +
+                ", to=" + to +
                 '}';
     }
 }
