@@ -6,12 +6,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event implements Serializable{
-    int EventID;
-    String name;
-    ArrayList<UserGroup> participants;
-    LocalDate date;
-    LocalTime from;
-    LocalTime to;
+    private int EventID;
+    private String name;
+    private ArrayList<UserGroup> participants;
+    private LocalDate date;
+    private LocalTime from;
+    private LocalTime to;
 
     public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDate date, LocalTime from, LocalTime to) {
         this.EventID = EventID;

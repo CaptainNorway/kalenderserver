@@ -3,9 +3,6 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by sondrehj on 24.02.2015.
- */
 public class Calendar implements Serializable {
     
     int CalendarID;
