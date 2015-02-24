@@ -40,4 +40,13 @@ public class Calendar {
     public void setUserGroups(ArrayList<UserGroup> userGroups) {
         this.userGroups = userGroups;
     }
+
+    @Override
+    public String toString() {
+        return "Calendar{" +
+                "CalendarID=" + CalendarID +
+                ", name='" + name + '\'' +
+                ", userGroups=" + userGroups +
+                '}';
+    }
 }
