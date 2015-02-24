@@ -41,10 +41,11 @@ public class Calendar implements Serializable {
 
     @Override
     public String toString() {
-        return "Calendar(" +
-                "CalendarID: " + CalendarID +
-                ", name: " + name  +
-                ", userGroups subscribed: " + userGroups +
-                ')';
+
+        return "Calendar{" +
+                "CalendarID=" + CalendarID +
+                ", name='" + name + '\'' +
+                ", userGroups=" + userGroups +
+                '}';
     }
 }
