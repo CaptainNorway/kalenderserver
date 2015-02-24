@@ -33,6 +33,9 @@ public class CalendarQueries {
         con.close();
         return calendars;
     }
+    /*
+    * Hjelpefunksjon til getCalendars
+     */
     
     public static ArrayList<UserGroup> getCalendarUserGroups (int CalendarID, Connection con) throws SQLException {
         ArrayList<UserGroup> userGroups = new ArrayList<>();
