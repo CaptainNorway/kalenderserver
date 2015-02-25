@@ -1,38 +1,40 @@
 package database;
 
-import java.sql.*;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-/**
- * Created by sondrehj on 23.02.2015.
- */
 public class DBConnect {
-
-    // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/sondrehj_fellesprosjekt";
-
-    //  Database credentials
-    static final String USER = "sondrehj_fp";
-    static final String PASS = "1q2w3e4r";
-
-    public static Connection getConnection(){
-        Connection conn = null;
+    public static DataSource getMySQLDataSource() {
+        Properties props = new Properties();
+        FileInputStream fis = null;
+        MysqlDataSource mysqlDS = null;
         try {
-            //STEP 2: Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-            //STEP 3: Open a connection
-            System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-        } catch (Exception e) {
+            fis = new FileInputStream("db.properties");
+            props.load(fis);
+            mysqlDS = new MysqlDataSource();
+            mysqlDS.setURL(props.getProperty("MYSQL_DB_URL"));
+            mysqlDS.setUser(props.getProperty("MYSQL_DB_USERNAME"));
+            mysqlDS.setPassword(props.getProperty("MYSQL_DB_PASSWORD"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return conn;
+        return mysqlDS;
     }
-    
-    public static void main(String[] args){
-        DBConnect.getConnection();
+
+    public static Connection getConnection() {
+        DataSource ds = null;
+        ds = getMySQLDataSource();
+        Connection con = null;
+        try {
+            con = ds.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return con;
     }
-    
 }

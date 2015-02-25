@@ -33,7 +33,7 @@ public class EventQueries {
 
 	      int[] updateCounts = pstmt.executeBatch();
 	      checkUpdateCoun
-		
+
 		return null;
 	}
 }

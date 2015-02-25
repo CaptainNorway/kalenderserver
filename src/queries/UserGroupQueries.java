@@ -26,13 +26,13 @@ public class UserGroupQueries {
 	      }
 	    }
 	  }
-	
+
 	public static void createEmptyUserGroup(UserGroup users){
 		Connection con = null;
 		PreparedStatement prep;
 		try{
 			con = DBConnect.getConnection();
-			String query = "INSERT INTO UserGroup(Name) VALUES(?)";				
+			String query = "INSERT INTO UserGroup(Name) VALUES(?)";
 			prep = con.prepareStatement(query);
 			prep.setString(1, users.getName());
 			prep.execute();
@@ -40,7 +40,7 @@ public class UserGroupQueries {
 			System.out.println(e);
 		}
 	}
-	
+
 	public static void addUsers(UserGroup users){
 		Connection con = null;
 		PreparedStatement prep;
@@ -48,7 +48,7 @@ public class UserGroupQueries {
 			con = DBConnect.getConnection();
 			con.setAutoCommit(false);
 			String query = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?)";
-			prep = con.prepareStatement(query);			
+			prep = con.prepareStatement(query);
 			for(Person person : users.getUsers()){
 				prep.setInt(0, person.getPersonID());
 				prep.setInt(1, users.getUserGroupID());
@@ -61,7 +61,7 @@ public class UserGroupQueries {
 			System.out.println(e);
 		}
 	}
-	
+
 	public static ArrayList<UserGroup> getUserGroups(Calendar cal){
 		Connection con = null;
 		PreparedStatement prep = null;
@@ -84,9 +84,9 @@ public class UserGroupQueries {
 			System.out.println(e);
 			return null;
 		}
-			
+
 	}
-	
+
 	public static ArrayList<Person> getPersons(ArrayList<UserGroup> usersList){
 		Connection con = null;
 		PreparedStatement prep = null;
@@ -118,7 +118,7 @@ public class UserGroupQueries {
 			return null;
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		UserGroup ug = new UserGroup(0, "SuperKalender", null);
 		createEmptyUserGroup(ug);
