@@ -150,10 +150,11 @@ public class CalendarQueries {
     }
 
     public static void main(String[] args) throws SQLException {
-        //Calendar c = new Calendar(11, "Sondre2", null);
-        //UserGroup u = new UserGroup(1, "Pelle", null);
+        Calendar c = new Calendar(4, "Sondre2", null);
+        UserGroup u = new UserGroup(4, "Pelle", null);
         //removeUserGroup(c, u);
         //createCalendar(c);
+        //addUserGroup(c, u);
         //deleteCalendar(c);
     }
 }
