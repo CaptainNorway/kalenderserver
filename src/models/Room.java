@@ -35,7 +35,7 @@ public class Room implements Serializable {
         return "Room(" +
                 "ID: " + roomID +
                 ", name: " + roomName +
-                ", capasity: " + capacity +
+                ", capacity: " + capacity +
                 ')';
     }
 }
