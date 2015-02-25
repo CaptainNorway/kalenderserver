@@ -66,7 +66,7 @@ public class EventQueries {
 	    	  ArrayList<Calendar> templist = new ArrayList<>();
 	    	  templist.add(new Calendar(calendarID, null, null));
 	    	  
-	    	  // getUserGroup må lages!!!!!!!!!!
+	    	  // getUserGroup må lages!!!!!!!!!!!
 	    	  Calendar calendar = new Calendar (calendarID, calendarName, getUserGroup(templist));
 	    	  
 	    	  events.add(new Event(eventID, eventName, null, from, to, calendar));
