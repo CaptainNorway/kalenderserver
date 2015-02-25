@@ -25,6 +25,11 @@ public class Person implements Serializable{
 	    	System.out.println("�nei");
 	    }
 	}
+	public Person(String username, String name, int personID){
+		this.username = username;
+		this.name = name;
+		this.personID = personID;
+	}
 	/**
 	 * Fetches the persons registered name and personID fromt the database
 	 */
