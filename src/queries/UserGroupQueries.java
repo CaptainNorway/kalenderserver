@@ -200,14 +200,9 @@ public class UserGroupQueries {
 			prep = con.prepareStatement(query);
 			prep.setInt(1, person.getPersonID());
 			rs = prep.executeQuery();
+			ArrayList<Person> allPersons = new ArrayList<>();
 			while(rs.next()){
 				
-				if(true){	
-					
-				}
-				else{
-					
-				}
 				
 				
 			}
