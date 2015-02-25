@@ -5,18 +5,19 @@ import models.Room;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoomQueries {
 
     public static ArrayList<Room> getRooms() {
         ArrayList<Room> rooms = new ArrayList<>();
-        Connection con = DBConnect.getConnection();
         try {
+            Connection con = DBConnect.getConnection();
             String sqlQuery = "SELECT * FROM Room";
 
-            PreparedStatement pstmt = con.prepareStatement(sqlQuery);
-            ResultSet resultSet = pstmt.executeQuery();
+            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 int RoomID = resultSet.getInt("RoomID");
@@ -25,16 +26,17 @@ public class RoomQueries {
                 rooms.add(new Room(RoomID, RoomName, Capacity));
             }
             resultSet.close();
-            pstmt.close();
+            preparedStatement.close();
             con.close();
             return rooms;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
     public static void main(String[] args) {
         ArrayList<Room> rooms = RoomQueries.getRooms();
+        System.out.println("Printing a list of the room entries in the database table ROOM:");
         for (Room room : rooms) {
             System.out.println(room);
         }
