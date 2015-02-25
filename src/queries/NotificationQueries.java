@@ -21,12 +21,8 @@ public class NotificationQueries {
 		
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT * N"
-			
-			
-			
+			String query = "SELECT * N";
 		}
-		
 	}
 	
 	public static void setRead(Notification notification, Person person){
