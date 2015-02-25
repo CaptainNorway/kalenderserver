@@ -56,11 +56,9 @@ public class MultipleSocketServer implements Runnable {
             OutputStreamWriter osw = new OutputStreamWriter(os, "US-ASCII");
             osw.write(returnCode);
             osw.flush();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
-        }
-        finally {
+        } finally {
             try {
                 connection.close();
             } catch (IOException e) {

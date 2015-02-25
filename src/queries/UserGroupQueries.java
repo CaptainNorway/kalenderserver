@@ -208,6 +208,8 @@ public class UserGroupQueries {
     }
 
     public static void main(String[] args) {
+
+
         //UserGroup ug = new UserGroup(0, "SuperKalender", null);
         //createEmptyUserGroup(ug);
 
@@ -230,11 +232,11 @@ public class UserGroupQueries {
 //			System.out.println(g.getName());
 //		}
 
-//		UserGroup ug = new UserGroup(6, null, null); 
+//		UserGroup ug = new UserGroup(6, null, null);
 //		ArrayList<UserGroup> cals = new ArrayList<UserGroup>();
 //		cals.add(ug);
 //		deleteUserGroups(cals);
 
-        createEmptyUserGroup("SuperUserGroup");
+//      createEmptyUserGroup("SuperUserGroup");
     }
 }
