@@ -2,24 +2,25 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event implements Serializable{
     private int EventID;
+    private Calendar cal;
     private String name;
     private ArrayList<UserGroup> participants;
-    private LocalDate date;
-    private LocalTime from;
-    private LocalTime to;
+    private LocalDateTime from;
+    private LocalDateTime to;
 
-    public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDate date, LocalTime from, LocalTime to) {
+    public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal) {
         this.EventID = EventID;
         this.name = name;
         this.participants = participants;
-        this.date = date;
         this.from = from;
         this.to = to;
+        this.cal = cal;
     }
 
     public ArrayList<UserGroup> getParticipants() {
@@ -30,31 +31,31 @@ public class Event implements Serializable{
         this.participants = participants;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public Calendar getCal() {
+		return cal;
+	}
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	public void setCal(Calendar cal) {
+		this.cal = cal;
+	}
 
-    public LocalTime getTo() {
-        return to;
-    }
+    public LocalDateTime getFrom() {
+		return from;
+	}
 
-    public void setTo(LocalTime to) {
-        this.to = to;
-    }
+	public void setFrom(LocalDateTime from) {
+		this.from = from;
+	}
 
-    public LocalTime getFrom() {
-        return from;
-    }
+	public LocalDateTime getTo() {
+		return to;
+	}
 
-    public void setFrom(LocalTime from) {
-        this.from = from;
-    }
+	public void setTo(LocalDateTime to) {
+		this.to = to;
+	}
 
-    public String getName() {
+	public String getName() {
         return name;
     }
 
@@ -74,7 +75,6 @@ public class Event implements Serializable{
     public String toString() {
         return "Event(" +
                 "EventID: " + EventID +
-                ", date: " + date +
                 ", to: " + to +
                 ", from: " + from +
                 ", participants: " + participants +
