@@ -190,14 +190,25 @@ public class UserGroupQueries {
 		ArrayList<UserGroup> userGroups = new ArrayList<UserGroup>();
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT UserGroup.UserGroupID , UserGroup.GroupName, Person."
+			String query = "SELECT UserGroupID, PersonID, Username, Name"
 					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person"
-					+ "WHERE PersonID = ?";
+					+ "WHERE EXISTS ( "
+					+ "SELECT UserGroupID "
+					+ "FROM UserGroup AS G "
+					+ "WHERE PersonID = ? AND G.UserGroupID = UserGroup.UserGroupID )";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, person.getPersonID());
 			rs = prep.executeQuery();
 			while(rs.next()){
-				userGroups.add(new UserGroup(rs.getInt("UserGroupID"),rs.getString("GroupName"),null));
+				
+				if(true){	
+					
+				}
+				else{
+					
+				}
+				
+				
 			}
 			return userGroups;
 		}
