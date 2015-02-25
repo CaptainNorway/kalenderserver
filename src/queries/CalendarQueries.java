@@ -52,7 +52,6 @@ public class CalendarQueries {
         }
     }
 
-
     public static void createCalendar(Calendar calendar) {
         Connection con = DBConnect.getConnection();
         //Execute query
@@ -90,7 +89,6 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
-
 
     public static ArrayList<Calendar> getCalendars(UserGroup userGroup) {
         ArrayList<Calendar> calendars = new ArrayList<>();
@@ -152,10 +150,10 @@ public class CalendarQueries {
     }
 
     public static void main(String[] args) throws SQLException {
-        Calendar c = new Calendar(11, "Sondre2", null);
-        UserGroup u = new UserGroup(1, "Pelle", null);
+        //Calendar c = new Calendar(11, "Sondre2", null);
+        //UserGroup u = new UserGroup(1, "Pelle", null);
         //removeUserGroup(c, u);
         //createCalendar(c);
-        deleteCalendar(c);
+        //deleteCalendar(c);
     }
 }
