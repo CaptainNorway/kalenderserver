@@ -13,7 +13,7 @@ import models.Event;
 import models.Calendar;
 
 public class EventQueries {
-	
+
 	public static void checkUpdateCounts(int[] updateCounts) {
 		for (int i = 0; i < updateCounts.length; i++) {
 			if (updateCounts[i] >= 0) {
@@ -62,9 +62,9 @@ public class EventQueries {
 
                 ArrayList<Calendar> templist = new ArrayList<>();
                 templist.add(new Calendar(calendarID, null, null));
-	    	  
+
 	    	    // getUserGroup må lages!!!!!!!!!!!
-                Calendar calendar = new Calendar (calendarID, calendarName, getUserGroup(templist));
+                Calendar calendar = new Calendar (calendarID, calendarName, null); //null må byttes ut med getUserGroup
                 events.add(new Event(eventID, eventName, null, from, to, calendar));
             }
         } catch (Exception e){
