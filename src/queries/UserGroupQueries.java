@@ -178,11 +178,11 @@ public class UserGroupQueries {
 			System.out.println(e);
 		}
 	}
-/**
- * Get all UserGroup(s) spesified person is in, does not give persons which are in the groups
- * @param person
- * @return
- */
+    /**
+    * Get all UserGroup(s) spesified person is in, does not give persons which are in the groups
+    * @param person
+    * @return
+    */
 	public static ArrayList<UserGroup> getUserGroups(Person person){
 		Connection con = null;
 		PreparedStatement prep = null;
@@ -212,6 +212,76 @@ public class UserGroupQueries {
 			return null;
 		}
 	}
+
+    /**
+     HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
+     Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement
+     ResultSet resultSet, osv ... husk å close alle ting, statements, resultsets og connections osv. 
+     */
+
+//    /**
+//     * Get all distinct persons in given UserGroup, checks specified UserGroupID
+//     * @param UserGroupID
+//     * @return ArrayList<Person>
+//     */
+//    public static ArrayList<Person> getPersonsInUserGroup(int UserGroupID) {
+//        ArrayList<Person> users = new ArrayList<>(); // users/persons/members
+//        try{
+//            Connection con = DBConnect.getConnection();
+//            String sqlQuery = "SELECT DISTINCT Person.PersonID, Person.Username, Person.Password, Person.Name "
+//                    + "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
+//                    + "WHERE UserGroupID = " + UserGroupID + "";
+//
+//            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//
+//            while(resultSet.next()) {
+//                int PersonID = resultSet.getInt("PersonID");
+//                String Username = resultSet.getString("Username");
+//                String Password = resultSet.getString("Password");
+//                String Name = resultSet.getString("Name");
+//                users.add(new Person(PersonID, Username, null, Name));
+//            }
+//            resultSet.close();
+//            preparedStatement.close();
+//            con.close();
+//            return users;
+//        }
+//        catch(SQLException e){
+//            throw new IllegalArgumentException(e);
+//        }
+//    }
+//
+//    /**
+//     * Returns all UserGroup(s) a specified person belongs to.
+//     * @param person
+//     * @return ArrayList<UserGroup>
+//     */
+//    public static ArrayList<UserGroup> getUserGroups(Person person){
+//        ArrayList<UserGroup> userGroups = new ArrayList<>();
+//        try{
+//            Connection con = DBConnect.getConnection();
+//            String sqlQuery = "SELECT UserGroup.UserGroupID , UserGroup.GroupName "
+//                    + "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
+//                    + "WHERE PersonID = " + person.getPersonID() + "";
+//
+//            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//
+//            while(resultSet.next()){
+//                int UserGroupID = resultSet.getInt("UserGroupID");
+//                String GroupName = resultSet.getString("GroupName");
+//                userGroups.add(new UserGroup(UserGroupID, GroupName, getPersonsInUserGroup(UserGroupID)));
+//            }
+//            resultSet.close();
+//            preparedStatement.close();
+//            con.close();
+//            return userGroups;
+//        }
+//        catch( SQLException e){
+//            throw new IllegalArgumentException(e);
+//        }
+//    }
 	
 	public static void main(String[] args) {
 		//UserGroup ug = new UserGroup(0, "SuperKalender", null);
