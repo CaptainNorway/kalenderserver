@@ -3,6 +3,7 @@ package queries;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,9 +85,106 @@ public class EventQueries {
 			return null;
 		}
 	}
-}
 	
-//	public static void main(String[] args) {
+	/**
+	 * Creates an Event with the given name. 
+	 * This method could be improved to do everything in one query.
+	 * @param users
+	 */
+	
+	/*Følgende kall fungerer i mysqladmin hos NTNU, men ikke som et kall gjennom Java.
+	 *START TRANSACTION;
+	 *INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES ('Vaske bort kaffi', '2015-05-03T15:39', '2015-05-03T19:41');
+	 *INSERT INTO CalendarEvent(CalendarID, EventID) SELECT 1, LAST_INSERT_ID();
+	 *COMMIT;
+	 */
+	public static void createEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES (?, ?, ?);";
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			prep.setString(1, event.getName());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
+			System.out.println(prep.toString());
+			prep.executeUpdate();
+			System.out.println("Executed");
+			ResultSet keys = prep.getGeneratedKeys();
+			keys.next();
+			int key = keys.getInt(1);
+			query = "INSERT INTO CalendarEvent(CalendarID, EventID) VALUES (?, ?);";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getCal().getCalendarID());
+			prep.setInt(2, key);
+			System.out.println(prep.toString());
+			prep.execute();
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Edit an event that already exists.
+	 * @param event
+	 */
+	public static void editEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "UPDATE `Event` "
+					+ "SET `EventName` = ?, "
+					+ "`From` = ?, "
+					+ "`To` = ? "
+					+ "WHERE `EventID` = ?";				
+			prep = con.prepareStatement(query);
+			prep.setString(1, event.getName());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
+			prep.setInt(4, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Delete an event.
+	 * @param event
+	 */
+	public static void deleteEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "DELETE FROM Event WHERE EventID = ?";			
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		Calendar cal = new Calendar(2, "Yolo", null);
+		Event ev = new Event(22, "Vaske bort kaffi", null, LocalDateTime.parse("2015-05-03T15:39:00"), LocalDateTime.parse("2015-05-03T19:41:00"), cal);
+		//createEvent(ev);
+		//deleteEvent(ev);
+		//editEvent(ev);
 //		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
 //		ArrayList<Calendar> cal = CalendarQueries.getCalendars(ug);
 //		ArrayList<Event> events = getEvents(cal);
@@ -121,5 +219,7 @@ public class EventQueries {
 
 //      createEmptyUserGroup("SuperUserGroup");
 //    }
-//}
+
+	}
+}
 
