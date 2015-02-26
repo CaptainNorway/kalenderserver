@@ -85,7 +85,7 @@ public class EventQueries {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Creates an Event with the given name. 
 	 * This method could be improved to do everything in one query.
@@ -182,9 +182,12 @@ public class EventQueries {
 		
 		Calendar cal = new Calendar(2, "Yolo", null);
 		Event ev = new Event(22, "Vaske bort kaffi", null, LocalDateTime.parse("2015-05-03T15:39:00"), LocalDateTime.parse("2015-05-03T19:41:00"), cal);
+	}
+}
 		//createEvent(ev);
 		//deleteEvent(ev);
 		//editEvent(ev);
+
 //		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
 //		ArrayList<Calendar> cal = CalendarQueries.getCalendars(ug);
 //		ArrayList<Event> events = getEvents(cal);
@@ -219,7 +222,4 @@ public class EventQueries {
 
 //      createEmptyUserGroup("SuperUserGroup");
 //    }
-
-	}
-}
 
