@@ -2,12 +2,16 @@ package queries;
 
 import database.DBConnect;
 import models.Event;
+import models.Person;
 import models.Room;
+import models.UserGroup;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 
 public class RoomQueries {
@@ -41,14 +45,14 @@ public class RoomQueries {
     	int eventID = event.getEventID();
     	try{
     		Connection con = DBConnect.getConnection();
-    		String sqlQuery = "SELECT Room.RoomName, Room.Capacity"
-    				+ "FROM Room"
-    				+"LEFT JOIN (SELECT m.EventID, m.RoomName, e.EventName, e.From, e.To"
-    				+"FROM Meeting AS m"
-    				+"NATURAL JOIN (SELECT *"
-    				+"FROM Event"
+    		String sqlQuery = "SELECT Room.RoomName, Room.Capacity "
+    				+ "FROM Room "
+    				+"LEFT JOIN (SELECT m.EventID, m.RoomName, e.EventName, e.From, e.To "
+    				+"FROM Meeting AS m "
+    				+"NATURAL JOIN (SELECT * "
+    				+"FROM Event "
     				+"WHERE (`From` < ? AND `To` < ?) OR (`From` > ?)) AS e) "
-    				+"AS me ON Room.RoomName = me.RoomName"
+    				+"AS me ON Room.RoomName = me.RoomName "
     				+"WHERE (`Capacity` > ?  AND (`EventID` != ? OR `EventID` is NULL))";
     		PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
     		preparedStatement.setString(1, event.getFrom().toString());
@@ -73,11 +77,18 @@ public class RoomQueries {
     	}
     }
     public static void main(String[] args) {
-//        ArrayList<Room> rooms = RoomQueries.getRooms();
-//        System.out.println("Printing a list of the room entries in the database table ROOM:");
-//        for (Room room : rooms) {
-//            System.out.println(room);
-//        }
+    	LocalDateTime from = LocalDateTime.of(2015,3, 11, 15, 00);
+    	LocalDateTime to= LocalDateTime.of(2015, 3, 11, 21, 00);   
+    	UserGroup ug = new UserGroup(1, null, null);
+    	ArrayList<UserGroup> participants = new ArrayList<>();
+    	participants.add(ug);
+    	Event event = new Event(99, "kaffe", participants, from, to, null);
+        ArrayList<Room> rooms = getAvailableRooms(event);
+        System.out.println("Printing a list of the room entries in the database table ROOM:");
+    	for (Room room : rooms) {
+    		System.out.println(room);
+    	}
+        
     	
 }
 }
