@@ -177,49 +177,23 @@ public class EventQueries {
 			System.out.println(e);
 		}
 	}
-	
+/*	
 	public static void main(String[] args) {
 		
 		Calendar cal = new Calendar(2, "Yolo", null);
 		Event ev = new Event(22, "Vaske bort kaffi", null, LocalDateTime.parse("2015-05-03T15:39:00"), LocalDateTime.parse("2015-05-03T19:41:00"), cal);
+
+		createEvent(ev);
+		deleteEvent(ev);
+		editEvent(ev);
+
+		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
+		ArrayList<Calendar> cal3 = CalendarQueries.getCalendars(ug);
+		ArrayList<Event> events = getEvents(cal3);
+		for (Event event : events){
+			System.out.println(event.toString());
+		}
 	}
+	*/
 }
-		//createEvent(ev);
-		//deleteEvent(ev);
-		//editEvent(ev);
-
-//		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
-//		ArrayList<Calendar> cal = CalendarQueries.getCalendars(ug);
-//		ArrayList<Event> events = getEvents(cal);
-//		for (Event event : events){
-//			System.out.println(event.toString());
-//		}
-//       createEmptyUserGroup(ug);
-
-//		UserGroup us1 = new UserGroup(1, null, null);
-//		UserGroup us2 = new UserGroup(3, null, null);
-//		UserGroup us3 = new UserGroup(4, null, null);
-//		UserGroup us4 = new UserGroup(5, null, null);
-//		ArrayList<UserGroup> groups = new ArrayList<>();
-//		groups.add(us1);groups.add(us2);groups.add(us3);groups.add(us4);
-//		getPersons(groups);
-
-//		ArrayList<Calendar> cals = new ArrayList<>();
-//		Calendar cal1 = new Calendar(1, null, null);
-//		Calendar cal2 = new Calendar(2, null, null);
-//		Calendar cal3 = new Calendar(3, null, null);
-//		Calendar cal4 = new Calendar(4, null, null);
-//		cals.add(cal1);cals.add(cal2);cals.add(cal3);cals.add(cal4);
-//		ArrayList<UserGroup> users = getUserGroups(cals);
-//		for(UserGroup g: users){
-//			System.out.println(g.getName());
-//		}
-
-//		UserGroup ug = new UserGroup(6, null, null);
-//		ArrayList<UserGroup> cals = new ArrayList<UserGroup>();
-//		cals.add(ug);
-//		deleteUserGroups(cals);
-
-//      createEmptyUserGroup("SuperUserGroup");
-//    }
 
