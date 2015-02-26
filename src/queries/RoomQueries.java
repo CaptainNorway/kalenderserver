@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import queries.EventQueries;
 
 public class RoomQueries {
 
@@ -83,6 +84,7 @@ public class RoomQueries {
     	ArrayList<UserGroup> participants = new ArrayList<>();
     	participants.add(ug);
     	Event event = new Event(99, "kaffe", participants, from, to, null);
+    	
         ArrayList<Room> rooms = getAvailableRooms(event);
         System.out.println("Printing a list of the room entries in the database table ROOM:");
     	for (Room room : rooms) {
