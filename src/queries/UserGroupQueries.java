@@ -179,7 +179,9 @@ public class UserGroupQueries {
 		}
 	}
     /**
-    * Get all UserGroup(s) spesified person is in, does not give persons which are in the groups
+    * Get all UserGroup(s) spesified person is in, including persons which are in the groups
+    * Person objects are if they appear in different groups, but will be return true on equal 
+    * because they have the same PersonID
     * @param person
     * @return
     */
@@ -341,13 +343,13 @@ public class UserGroupQueries {
 
 //      createEmptyUserGroup("SuperUserGroup");
 		
-		Person person = new Person("martin", "bla", 5);
-		ArrayList<UserGroup> userGroups = getUserGroups(person);
-		for(UserGroup ug : userGroups){
-			System.out.println("Gruppe: " + ug.getName() +"----------");
-			for(Person p : ug.getUsers()){
-				System.out.println("\t"+p.getName());
-			}
-		}
+//		Person person = new Person("martin", "bla", 5);
+//		ArrayList<UserGroup> userGroups = getUserGroups(person);
+//		for(UserGroup ug : userGroups){
+//			System.out.println("Gruppe: " + ug.getName() +"----------");
+//			for(Person p : ug.getUsers()){
+//				System.out.println("\t"+p.getName());
+//			}
+//		}
     }
 }
