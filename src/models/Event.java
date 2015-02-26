@@ -75,8 +75,9 @@ public class Event implements Serializable{
     public String toString() {
         return "Event(" +
                 "EventID: " + EventID +
-                ", to: " + to +
+                ", EventName: " + name +
                 ", from: " + from +
+                ", to: " + to +
                 ", participants: " + participants +
                 ')' ;
     }
