@@ -3,6 +3,7 @@ package queries;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,42 +85,112 @@ public class EventQueries {
 			return null;
 		}
 	}
-}
+
+	/**
+	 * Creates an Event with the given name. 
+	 * @param users
+	 */
 	
-//	public static void main(String[] args) {
-//		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
-//		ArrayList<Calendar> cal = CalendarQueries.getCalendars(ug);
-//		ArrayList<Event> events = getEvents(cal);
-//		for (Event event : events){
-//			System.out.println(event.toString());
-//		}
-//       createEmptyUserGroup(ug);
+	public static void createEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
+			
+			String query = "INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES (?, ?, ?);";
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			prep.setString(1, event.getName());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
+			prep.executeUpdate();
+			ResultSet keys = prep.getGeneratedKeys();
+			keys.next();
+			int key = keys.getInt(1);
 
-//		UserGroup us1 = new UserGroup(1, null, null);
-//		UserGroup us2 = new UserGroup(3, null, null);
-//		UserGroup us3 = new UserGroup(4, null, null);
-//		UserGroup us4 = new UserGroup(5, null, null);
-//		ArrayList<UserGroup> groups = new ArrayList<>();
-//		groups.add(us1);groups.add(us2);groups.add(us3);groups.add(us4);
-//		getPersons(groups);
+			query = "INSERT INTO CalendarEvent(CalendarID, EventID) SELECT ?, LAST_INSERT_ID();";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getCal().getCalendarID());
+			prep.executeUpdate();
+			con.commit();
 
-//		ArrayList<Calendar> cals = new ArrayList<>();
-//		Calendar cal1 = new Calendar(1, null, null);
-//		Calendar cal2 = new Calendar(2, null, null);
-//		Calendar cal3 = new Calendar(3, null, null);
-//		Calendar cal4 = new Calendar(4, null, null);
-//		cals.add(cal1);cals.add(cal2);cals.add(cal3);cals.add(cal4);
-//		ArrayList<UserGroup> users = getUserGroups(cals);
-//		for(UserGroup g: users){
-//			System.out.println(g.getName());
-//		}
+			event.setEventID(key);
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Edit an event that already exists.
+	 * @param event
+	 */
+	public static void editEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "UPDATE `Event` "
+					+ "SET `EventName` = ?, "
+					+ "`From` = ?, "
+					+ "`To` = ? "
+					+ "WHERE `EventID` = ?";				
+			prep = con.prepareStatement(query);
+			prep.setString(1, event.getName());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
+			prep.setInt(4, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Delete an event.
+	 * @param event
+	 */
+	public static void deleteEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "DELETE FROM Event WHERE EventID = ?";			
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	/*
+	public static void main(String[] args) {
+		
+		Calendar cal = new Calendar(3, "Yolo", null);
+		Event ev = new Event(22, "Slå ned Sigurd", null, LocalDateTime.parse("2015-03-03T05:39:00"), LocalDateTime.parse("2015-03-03T05:41:00"), cal);
 
-//		UserGroup ug = new UserGroup(6, null, null);
-//		ArrayList<UserGroup> cals = new ArrayList<UserGroup>();
-//		cals.add(ug);
-//		deleteUserGroups(cals);
+		createEvent(ev);
+		
+		
+		deleteEvent(ev);
+		editEvent(ev);
 
-//      createEmptyUserGroup("SuperUserGroup");
-//    }
-//}
+		UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
+		ArrayList<Calendar> cal3 = CalendarQueries.getCalendars(ug);
+		ArrayList<Event> events = getEvents(cal3);
+		for (Event event : events){
+			System.out.println(event.toString());
+		}
+	}
+*/
+}
 
