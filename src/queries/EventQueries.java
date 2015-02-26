@@ -88,38 +88,33 @@ public class EventQueries {
 
 	/**
 	 * Creates an Event with the given name. 
-	 * This method could be improved to do everything in one query.
 	 * @param users
 	 */
 	
-	/*Følgende kall fungerer i mysqladmin hos NTNU, men ikke som et kall gjennom Java.
-	 *START TRANSACTION;
-	 *INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES ('Vaske bort kaffi', '2015-05-03T15:39', '2015-05-03T19:41');
-	 *INSERT INTO CalendarEvent(CalendarID, EventID) SELECT 1, LAST_INSERT_ID();
-	 *COMMIT;
-	 */
 	public static void createEvent(Event event){
 		Connection con = null;
 		PreparedStatement prep;
 		try{
 			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
+			
 			String query = "INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES (?, ?, ?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, event.getName());
 			prep.setString(2, event.getFrom().toString());
 			prep.setString(3, event.getTo().toString());
-			System.out.println(prep.toString());
 			prep.executeUpdate();
-			System.out.println("Executed");
 			ResultSet keys = prep.getGeneratedKeys();
 			keys.next();
 			int key = keys.getInt(1);
-			query = "INSERT INTO CalendarEvent(CalendarID, EventID) VALUES (?, ?);";
+
+			query = "INSERT INTO CalendarEvent(CalendarID, EventID) SELECT ?, LAST_INSERT_ID();";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, event.getCal().getCalendarID());
-			prep.setInt(2, key);
-			System.out.println(prep.toString());
-			prep.execute();
+			prep.executeUpdate();
+			con.commit();
+
+			event.setEventID(key);
 			prep.close();
 		    con.close();
 		} catch(SQLException e){
@@ -177,13 +172,15 @@ public class EventQueries {
 			System.out.println(e);
 		}
 	}
-/*	
+	/*
 	public static void main(String[] args) {
 		
-		Calendar cal = new Calendar(2, "Yolo", null);
-		Event ev = new Event(22, "Vaske bort kaffi", null, LocalDateTime.parse("2015-05-03T15:39:00"), LocalDateTime.parse("2015-05-03T19:41:00"), cal);
+		Calendar cal = new Calendar(3, "Yolo", null);
+		Event ev = new Event(22, "Slå ned Sigurd", null, LocalDateTime.parse("2015-03-03T05:39:00"), LocalDateTime.parse("2015-03-03T05:41:00"), cal);
 
 		createEvent(ev);
+		
+		
 		deleteEvent(ev);
 		editEvent(ev);
 
@@ -194,6 +191,6 @@ public class EventQueries {
 			System.out.println(event.toString());
 		}
 	}
-	*/
+*/
 }
 
