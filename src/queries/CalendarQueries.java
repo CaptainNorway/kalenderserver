@@ -2,14 +2,17 @@ package queries;
 
 import database.DBConnect;
 import models.Calendar;
-import models.Person;
 import models.UserGroup;
-
 import java.sql.*;
 import java.util.ArrayList;
 
 public class CalendarQueries {
 
+    /**
+     * Adds a given UserGroup to a given Calendar.
+     * @param calendar
+     * @param usergroup 
+     */
     public static void addUserGroup(Calendar calendar, UserGroup usergroup) {
 
         Connection con = DBConnect.getConnection();
@@ -32,6 +35,11 @@ public class CalendarQueries {
         }
     }
 
+    /**
+     * Removes a given UserGroup from a given Calendar.
+     * @param calendar
+     * @param usergroup
+     */
     public static void removeUserGroup(Calendar calendar, UserGroup usergroup) {
 
         Connection con = DBConnect.getConnection();
@@ -51,7 +59,10 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
-
+    /**
+     * Creates an empty Calendar from a Calendar-object.
+     * @param calendar
+     */
     public static void createCalendar(Calendar calendar) {
         Connection con = DBConnect.getConnection();
         //Execute query
@@ -71,7 +82,10 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
-
+    /**
+     * Deletes a given Calendar.
+     * @param calendar
+     */
     public static void deleteCalendar(Calendar calendar) {
         Connection con = DBConnect.getConnection();
         //Execute query
@@ -90,6 +104,11 @@ public class CalendarQueries {
         }
     }
 
+    /**
+     * Get all Calendars of a given UserGroup. userGroupID must exist and be valid.
+     * @param userGroup
+     * @return ArrayList<Calendar> 
+     */
     public static ArrayList<Calendar> getCalendars(UserGroup userGroup) {
         ArrayList<Calendar> calendars = new ArrayList<>();
         ArrayList<UserGroup> userGroups = new ArrayList<>();
@@ -118,11 +137,13 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
-    
-    /*
-    * Hjelpefunksjon til getCalendars
-     */
 
+    /**
+     * Get all UserGroups of a given calendar. Used by getCalendars(UserGroup)
+     * @param CalendarID - The ID of the Calendar
+     * @param con - A database connection.
+     * @return ArrayList<UserGroup>
+     */
     public static ArrayList<UserGroup> getCalendarUserGroups(int CalendarID, Connection con) {
         ArrayList<UserGroup> userGroups = new ArrayList<>();
         //Execute query
