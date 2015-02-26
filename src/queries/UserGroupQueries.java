@@ -190,19 +190,47 @@ public class UserGroupQueries {
 		ArrayList<UserGroup> userGroups = new ArrayList<UserGroup>();
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT UserGroupID, PersonID, Username, Name"
-					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person"
+			String query = "SELECT UserGroupID, PersonID, Username, Name, GroupName "
+					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
 					+ "WHERE EXISTS ( "
 					+ "SELECT UserGroupID "
-					+ "FROM UserGroup AS G "
+					+ "FROM PersonUserGroup AS G "
 					+ "WHERE PersonID = ? AND G.UserGroupID = UserGroup.UserGroupID )";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, person.getPersonID());
 			rs = prep.executeQuery();
-			ArrayList<Person> allPersons = new ArrayList<>();
+			// Denne klassen brukes slik at contains og indexOf skal returnere positivt 
+			// om id-er lik selvom det faktisk ikke er samme objekt
+			class Wrapper{
+				public int number;
+				Wrapper(Integer input){
+					number=input;
+				}
+				@Override
+				public boolean equals(Object o){
+					return number == ((Wrapper) o).number;
+				}
+			}
+			ArrayList<Wrapper> userGroupIDs = new ArrayList<>(); 
 			while(rs.next()){
+				int userGroupID = rs.getInt("UserGroupID");
+				Wrapper userGroupIndex = new Wrapper(-1);
 				
+				if(!userGroupIDs.contains(new Wrapper(userGroupID))){
+					//Gruppe finnes ikke, legg til i liste
+					userGroupIDs.add(new Wrapper(userGroupID));
+					ArrayList<Person> persons = new ArrayList<Person>();
+					UserGroup userGroup = new UserGroup(userGroupID, rs.getString("GroupName"), persons);
+					userGroups.add(userGroup);
+					userGroupIndex.number = userGroups.size()-1;
+				}
+				else{
+					//Gruppe finnes fra før , hent referanse
+					userGroupIndex.number = userGroupIDs.indexOf(new Wrapper(userGroupID));
+				}
 				
+				Person dbPerson = new Person(rs.getString("Username"), rs.getString("Name"), rs.getInt("PersonID"));
+				userGroups.get(userGroupIndex.number).addUser(dbPerson);
 				
 			}
 			return userGroups;
@@ -312,5 +340,14 @@ public class UserGroupQueries {
 //		deleteUserGroups(cals);
 
 //      createEmptyUserGroup("SuperUserGroup");
+		
+		Person person = new Person("martin", "bla", 5);
+		ArrayList<UserGroup> userGroups = getUserGroups(person);
+		for(UserGroup ug : userGroups){
+			System.out.println("Gruppe: " + ug.getName() +"----------");
+			for(Person p : ug.getUsers()){
+				System.out.println("\t"+p.getName());
+			}
+		}
     }
 }
