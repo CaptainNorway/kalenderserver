@@ -10,7 +10,7 @@ public class Person implements Serializable{
     private String name;
 	private MessageDigest md;
 
-    public Person(int personID, String username, String password, String name){
+    public Person(String username, String password){
         this.personID = personID;
         this.username = username;
         this.name = name;
@@ -29,6 +29,12 @@ public class Person implements Serializable{
             e.printStackTrace();
 	    }
 	}
+    
+    public Person(String username, String name, int personID){
+    	this.username = username;
+    	this.name = name;
+    	this.personID = personID;
+    }
 
 	/**
 	 * Fetches the persons registered name and personID fromt the database
@@ -57,6 +63,11 @@ public class Person implements Serializable{
 	public String toString() {
 		return "Person(personID: " + personID + ", username=" + username
 				+ ", password: " + password + ", name: " + name + ")";
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		return personID == ((Person) o).getPersonID();
 	}
 	
 }
