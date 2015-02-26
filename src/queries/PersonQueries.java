@@ -1,15 +1,11 @@
 package queries;
 
 import database.DBConnect;
-import models.Calendar;
 import models.Person;
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -75,9 +71,10 @@ public class PersonQueries {
             keys.next();
             int key = keys.getInt(1);
 
-            query = "INSERT INTO UserGroup(GroupName) VALUES (?);";
+            query = "INSERT INTO UserGroup(GroupName, Private) VALUES (?, ?);";
             prep = con.prepareStatement(query);
             prep.setString(1, person.getName());
+            prep.setInt(2, 1);
             prep.executeUpdate();
 
             query = "INSERT INTO PersonUserGroup (PersonID, UserGroupID) VALUES(?, LAST_INSERT_ID())";
@@ -94,6 +91,37 @@ public class PersonQueries {
         }
     }
 
+    public static void deletePerson(Person person) {
+
+        String pass;
+        Connection con;
+        PreparedStatement prep;
+        //Execute query
+        try {
+
+            con = DBConnect.getConnection();
+            con.setAutoCommit(false);
+
+            String query = "DELETE FROM Person WHERE Username = ?;";
+            prep = con.prepareStatement(query);
+            prep.setString(1, person.getUsername());
+            prep.executeUpdate();
+
+            query = "DELETE FROM UserGroup WHERE GroupName = ? AND private = ?;";
+            prep = con.prepareStatement(query);
+            prep.setString(1, person.getName());
+            prep.setInt(2, 1);
+            prep.executeUpdate();
+            
+            con.commit();
+            prep.close();
+            con.close();
+            System.out.println(person + " was deleted");
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
     /**
      * Retrieves the password of a given user.
      *
@@ -150,6 +178,7 @@ public class PersonQueries {
 
     public static void main(String[] agrs) {
         //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
+        deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         Scanner user_input = new Scanner(System.in);
         System.out.println("Username: ");
         String username = user_input.next();
