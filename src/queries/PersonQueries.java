@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by sondrehj on 26.02.2015.
@@ -74,7 +75,7 @@ public class PersonQueries {
         try {
             Person user = new Person(username, pass);
             if (user.getPassword().equals(getPassword(username))){
-                System.out.println("");
+                System.out.println("Login complete");
                 return true;
             } else {
                 System.out.println("Invalid Password");
@@ -87,9 +88,11 @@ public class PersonQueries {
     }
     
     public static void main(String[] agrs){
-        System.out.println(authenticate("sondrehj", "123"));
+        Scanner user_input = new Scanner( System.in );
+        System.out.println("Username: ");
+        String username = user_input.next();
+        System.out.println("Password: ");
+        String pass = user_input.next();
+        System.out.println(authenticate(username, pass));
     }
-    
-    
-    
 }
