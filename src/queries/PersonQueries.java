@@ -16,8 +16,14 @@ import java.util.Scanner;
  */
 public class PersonQueries {
 
+
+
+
+    /**
+     * @param username
+     */
     public static Person getPerson(String username) {
-        
+
         ArrayList<Person> person = new ArrayList<>();
         String pass;
         Connection con = DBConnect.getConnection();
@@ -28,12 +34,12 @@ public class PersonQueries {
 
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, username);
-            
+
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             int personID = rs.getInt("PersonID");
             String name = rs.getString("Name");
-            
+
             rs.close();
             pstmt.close();
             con.close();
@@ -64,7 +70,7 @@ public class PersonQueries {
             pstmt.close();
             con.close();
             return pass;
-            
+
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
@@ -74,7 +80,7 @@ public class PersonQueries {
 
         try {
             Person user = new Person(username, pass);
-            if (user.getPassword().equals(getPassword(username))){
+            if (user.getPassword().equals(getPassword(username))) {
                 System.out.println("Login complete");
                 return true;
             } else {
@@ -86,9 +92,9 @@ public class PersonQueries {
             return false;
         }
     }
-    
-    public static void main(String[] agrs){
-        Scanner user_input = new Scanner( System.in );
+
+    public static void main(String[] agrs) {
+        Scanner user_input = new Scanner(System.in);
         System.out.println("Username: ");
         String username = user_input.next();
         System.out.println("Password: ");
