@@ -5,12 +5,15 @@ import java.security.MessageDigest;
 
 public class Person implements Serializable{
 	private int personID;
-	private String name;
-	private String username;
+    private String username;
 	private String password;
+    private String name;
 	private MessageDigest md;
-	
-	public Person(String username, String password){
+
+    public Person(int personID, String username, String password, String name){
+        this.personID = personID;
+        this.username = username;
+        this.name = name;
 		try{
 	    	md = MessageDigest.getInstance("MD5");    	
 	    	md.update(password.getBytes());
@@ -22,14 +25,11 @@ public class Person implements Serializable{
 	    	this.password = sb.toString();
 	    }
 	    catch(Exception e){
-	    	System.out.println("�nei");
+	    	System.out.println("nei");
+            e.printStackTrace();
 	    }
 	}
-	public Person(String username, String name, int personID){
-		this.username = username;
-		this.name = name;
-		this.personID = personID;
-	}
+
 	/**
 	 * Fetches the persons registered name and personID fromt the database
 	 */
@@ -52,11 +52,11 @@ public class Person implements Serializable{
 	public String getPassword(){
 		return password;
 	}
+
 	@Override
 	public String toString() {
-		return "Person [personID=" + personID + ", name=" + name
-				+ ", username=" + username + ", password=" + password + ", md="
-				+ md + "]";
+		return "Person(personID: " + personID + ", username=" + username
+				+ ", password: " + password + ", name: " + name + ")";
 	}
 	
 }
