@@ -55,8 +55,8 @@ public class RoomQueries {
     				+"((`From` < (?) AND `To` < ?) "
     				+ "OR (`From` > ?)) )";
     		PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-//    		preparedStatement.setInt(1, event.getParticipants().size());
-    		preparedStatement.setInt(1, 33);
+    		preparedStatement.setInt(1, event.getParticipants().size());
+//    		preparedStatement.setInt(1, 33);
     		preparedStatement.setString(2, event.getFrom().toString());
     		preparedStatement.setString(3, event.getFrom().toString());
     		preparedStatement.setString(4, event.getTo().toString());
