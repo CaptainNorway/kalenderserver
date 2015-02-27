@@ -5,7 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import queries.UserGroupQueries;
 import models.Person;
+import models.UserGroup;
 
 /**
  * Created by hegelstad on 24/02/15.
@@ -52,8 +54,14 @@ public class MultipleSocketServer implements Runnable {
             //need to wait 10 seconds to pretend that we're processing something
             try {
                 RequestHandler handler = new RequestHandler(connection);
-                ArrayList<Person> p = handler.getPersons();
+                Person p = handler.getPerson();
                 System.out.println(p);
+                
+                ArrayList<UserGroup> ugs = UserGroupQueries.getUserGroups(p);
+                
+                ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
+            	oos.writeObject(ugs);
+            	
             } catch (Exception e) {
                 System.out.println(e);
             }
