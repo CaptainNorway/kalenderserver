@@ -58,7 +58,7 @@ public class MultipleSocketServer implements Runnable {
                 System.out.println(p);
                 
                 ArrayList<UserGroup> ugs = UserGroupQueries.getUserGroups(p);
-                
+                System.out.println(ugs);
                 ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
             	oos.writeObject(ugs);
             	
