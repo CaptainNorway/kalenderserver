@@ -51,15 +51,21 @@ public class RoomQueries {
     				+"WHERE CAPACITY>= ? AND NOT EXISTS ("
     				+"SELECT* "
     				+"FROM Room NATURAL JOIN Meeting NATURAL JOIN Event "
-    				+"WHERE Room.RoomName = AvailableRoom.RoomName AND NOT "
+    				+"WHERE Room.RoomName = AvailableRoom.RoomName AND "
+    				+ "Event.EventID != ? AND NOT "
     				+"((`From` < (?) AND `To` < ?) "
-    				+ "OR (`From` > ?)) )";
+    				+ "OR (`From` >= ?)) )";
     		PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
     		preparedStatement.setInt(1, event.getParticipants().size());
-//    		preparedStatement.setInt(1, 33);
-    		preparedStatement.setString(2, event.getFrom().toString());
+    		if(event.getEventID()==0){
+    			preparedStatement.setInt(2,-1);
+    		}
+    		else{
+    			preparedStatement.setInt(2,event.getEventID());
+    		}
     		preparedStatement.setString(3, event.getFrom().toString());
-    		preparedStatement.setString(4, event.getTo().toString());
+    		preparedStatement.setString(4, event.getFrom().toString());
+    		preparedStatement.setString(5, event.getTo().toString());
     		ResultSet resultSet = preparedStatement.executeQuery();
     		while(resultSet.next()){
     			String roomName = resultSet.getString("RoomName");
@@ -76,21 +82,22 @@ public class RoomQueries {
     		return null;
     	}
     }
-//    public static void main(String[] args) {
-//    	LocalDateTime from = LocalDateTime.of(2015,3, 11, 15, 00);
-//    	LocalDateTime to= LocalDateTime.of(2015, 3, 11, 21, 00);   
-//    	UserGroup ug = new UserGroup(1, null, null);
-//    	ArrayList<UserGroup> participants = new ArrayList<>();
-//    	participants.add(ug);
-//    	Event event = new Event(99, "kaffe", participants, from, to, null);
-//    	
-//        ArrayList<Room> rooms = getAvailableRooms(event);
-//        System.out.println("Printing a list of the room entries in the database table ROOM:");
-//    	for (Room room : rooms) {
-//    		System.out.println(room);
-//    	}
+    public static void main(String[] args) {
+    	LocalDateTime from = LocalDateTime.of(2015,3, 11, 20, 15);
+    	LocalDateTime to= LocalDateTime.of(2015, 3, 11, 20, 15);
+    	UserGroup ug = new UserGroup(1, null, null);
+    	ArrayList<UserGroup> participants = new ArrayList<>();
+    	participants.add(ug);
+    	Event event = new Event(99, "kaffe", participants, from, to, null);
+    	
+    	
+        ArrayList<Room> rooms = getAvailableRooms(event);
+        System.out.println("Printing a list of the room entries in the database table ROOM:");
+    	for (Room room : rooms) {
+    		System.out.println(room);
+    	}
         
     	
-//}
+  }
 }
 
