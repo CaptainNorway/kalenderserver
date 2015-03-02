@@ -69,11 +69,13 @@ public class MultipleSocketServer implements Runnable {
         	
         	RequestHandler handler = new RequestHandler(connection);
         	try{
-        		String command = handler.readString();
+        		Command command = handler.readCommand();
+        		System.out.println(command.command);
         		Object o = handler.executeCommand(command);
         		if(o!=null){
         			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
-        			oos.writeObject(o);        			
+        			oos.writeObject(o);
+        			System.out.println("Object sendt tilbake");
         		}
         		else{
         			System.out.println("Ingen objekt sendt tilbake");
