@@ -3,6 +3,11 @@ package socket;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import queries.UserGroupQueries;
+import models.Person;
+import models.UserGroup;
 
 /**
  * Created by hegelstad on 24/02/15.
@@ -26,6 +31,7 @@ public class MultipleSocketServer implements Runnable {
                 thread.start();
             }
         } catch (Exception e) {
+        	System.out.println(e);
         }
     }
 
@@ -36,22 +42,32 @@ public class MultipleSocketServer implements Runnable {
 
     public void run() {
         try {
-            BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
-            InputStreamReader isr = new InputStreamReader(is);
-            int character;
-            StringBuffer process = new StringBuffer();
-            while((character = isr.read()) != 13) {
-                process.append((char)character);
-            }
-            System.out.println(process);
+            //BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
+            //InputStreamReader isr = new InputStreamReader(is);
+            //int character;
+//            StringBuffer process = new StringBuffer();
+//            while((character = isr.read()) != 13) {
+//                process.append((char)character);
+//            }
+            //System.out.println(process);
+            
             //need to wait 10 seconds to pretend that we're processing something
             try {
-                Thread.sleep(10000);
+                RequestHandler handler = new RequestHandler(connection);
+                Person p = handler.getPerson();
+                System.out.println(p);
+                
+                ArrayList<UserGroup> ugs = UserGroupQueries.getUserGroups(p);
+                System.out.println(ugs);
+                ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
+            	oos.writeObject(ugs);
+            	
             } catch (Exception e) {
                 System.out.println(e);
             }
             TimeStamp = new java.util.Date().toString();
             String returnCode = "MultipleSocketServer repsonded at "+ TimeStamp + (char) 13;
+            
             BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
             OutputStreamWriter osw = new OutputStreamWriter(os, "US-ASCII");
             osw.write(returnCode);
