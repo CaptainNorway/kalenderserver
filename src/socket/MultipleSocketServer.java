@@ -69,6 +69,7 @@ public class MultipleSocketServer implements Runnable {
         	
         	RequestHandler handler = new RequestHandler(connection);
         	try{
+        		System.out.println("New connection");
         		Command command = handler.readCommand();
         		System.out.println(command.command);
         		Object o = handler.executeCommand(command);
