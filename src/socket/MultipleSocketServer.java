@@ -52,19 +52,36 @@ public class MultipleSocketServer implements Runnable {
             //System.out.println(process);
             
             //need to wait 10 seconds to pretend that we're processing something
-            try {
+        /*    try {
                 RequestHandler handler = new RequestHandler(connection);
-                Person p = handler.getPerson();
+                Person p = handler.readPerson();
                 System.out.println(p);
                 
                 ArrayList<UserGroup> ugs = UserGroupQueries.getUserGroups(p);
                 System.out.println(ugs);
-                ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
-            	oos.writeObject(ugs);
+                
             	
             } catch (Exception e) {
                 System.out.println(e);
-            }
+            }*/
+        	
+        	
+        	
+        	RequestHandler handler = new RequestHandler(connection);
+        	try{
+        		String command = handler.readString();
+        		Object o = handler.executeCommand(command);
+        		if(o!=null){
+        			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
+        			oos.writeObject(o);        			
+        		}
+        		else{
+        			System.out.println("Ingen objekt sendt tilbake");
+        		}
+        		
+        	}catch(Exception e){
+        		System.out.println(e);
+        	}
             TimeStamp = new java.util.Date().toString();
             String returnCode = "MultipleSocketServer repsonded at "+ TimeStamp + (char) 13;
             
