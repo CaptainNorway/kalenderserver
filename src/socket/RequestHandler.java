@@ -97,14 +97,17 @@ public class RequestHandler {
 		case "getNotification-person":
 			o = NotificationQueries.getNotifications(readPerson());
 			break;
-		case "setRead-notification,person":
+		case "setRead-notification-person":
 			Notification note = readNotification();
 			Person person = readPerson();
 			NotificationQueries.setRead(note, person);
 			break;
+		case "setNotification-notification":
+			NotificationQueries.setNotification(readNotification());
 		// Person
-		case "getPerson-username":
-			o = PersonQueries.getPerson(readString());
+		case "getPerson-person":
+			Person p = readPerson();
+			o = PersonQueries.getPerson(p.getUsername());
 			break;
 		case "createPerson-person":
 			PersonQueries.createPerson(readPerson());
@@ -112,12 +115,9 @@ public class RequestHandler {
 		case "deletePerson-person":
 			PersonQueries.deletePerson(readPerson());
 			break;
-		case "getPassword-username":
-			o = PersonQueries.getPassword(readString());
-			break;
 		case "authenticate-username-pass":
-			Person p = readPerson();
-			o = PersonQueries.authenticate(p);
+			Person user = readPerson();
+			o = PersonQueries.authenticate(user);
 			break;
 		// Room
 		case "getRooms":
