@@ -70,6 +70,30 @@ public class Person implements Serializable{
 		return password;
 	}
 
+	public MessageDigest getMd() {
+		return md;
+	}
+
+	public void setMd(MessageDigest md) {
+		this.md = md;
+	}
+
+	public void setPersonID(int personID) {
+		this.personID = personID;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
 		return "Person(personID: " + personID + ", username=" + username

@@ -43,6 +43,22 @@ public class Notification implements Serializable{
 		this.noteID = noteID;
 	}
 
+	public void setReceivers(ArrayList<UserGroup> receivers) {
+		this.receivers = receivers;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setSender(UserGroup sender) {
+		this.sender = sender;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
 	@Override
 	public String toString() {
 		return "Notification (receivers: " + receivers + ", note: " + note
