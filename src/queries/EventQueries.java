@@ -17,18 +17,6 @@ import queries.CalendarQueries;
 
 public class EventQueries {
 
-	public static void checkUpdateCounts(int[] updateCounts) {
-		for (int i = 0; i < updateCounts.length; i++) {
-			if (updateCounts[i] >= 0) {
-				System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
-			} else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
-				System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
-			} else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
-				System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
-			}
-		}
-	}
-
 	/**
      * Get all the evens from an ArrayList of calendars.
      * @param cal
@@ -55,8 +43,6 @@ public class EventQueries {
 	            }
 	
 	            ResultSet result = pstmt.executeQuery();
-	            System.out.println("We found something");
-	
 	            while (result.next()) {
 	                int eventID = result.getInt("EventID");
 	                int calendarID = result.getInt("CalendarID");
