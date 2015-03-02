@@ -159,11 +159,10 @@ public class PersonQueries {
      * @param pass
      * @return boolean - authenticate True/False
      */
-    public static boolean authenticate(String username, String pass) {
+    public static boolean authenticate(Person user) {
 
         try {
-            Person user = new Person(username, pass);
-            if (user.getPassword().equals(getPassword(username))) {
+            if (user.getPassword().equals(getPassword(user.getUsername()))) {
                 System.out.println("Login complete");
                 return true;
             } else {
@@ -175,7 +174,7 @@ public class PersonQueries {
             return false;
         }
     }
-
+/*
     public static void main(String[] agrs) {
         //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
@@ -185,5 +184,5 @@ public class PersonQueries {
         System.out.println("Password: ");
         String pass = user_input.next();
         System.out.println(authenticate(username, pass));
-    }
+    }*/
 }

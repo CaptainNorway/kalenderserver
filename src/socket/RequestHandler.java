@@ -50,11 +50,12 @@ public class RequestHandler {
 		case "getUserGroups-calendar":
 			o = UserGroupQueries.getUserGroups(readCalendars());
 			break;
-		case "deleteUserGroup-usegroup":
+		case "deleteUserGroup-usegroups":
 			UserGroupQueries.deleteUserGroups(readUserGroups());
 			break;
-		case "createUserGroup-string" :
-			UserGroupQueries.createEmptyUserGroup(readString());
+		case "createUserGroup-usergroup" :
+			UserGroup ug = readUserGroup();
+			UserGroupQueries.createEmptyUserGroup(ug.getName());
 			break;
 		case "addUsers-userGroup" :
 			UserGroupQueries.addUsers(readUserGroup());
@@ -115,9 +116,8 @@ public class RequestHandler {
 			o = PersonQueries.getPassword(readString());
 			break;
 		case "authenticate-username-pass":
-			String username = readString();
-			String pass = readString();
-			o = PersonQueries.authenticate(username, pass);
+			Person p = readPerson();
+			o = PersonQueries.authenticate(p);
 			break;
 		// Room
 		case "getRooms":
