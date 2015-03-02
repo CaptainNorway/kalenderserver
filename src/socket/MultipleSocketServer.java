@@ -76,6 +76,7 @@ public class MultipleSocketServer implements Runnable {
         		if(o!=null){
         			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
         			oos.writeObject(o);
+        			System.out.println(o);
         			System.out.println("Object sendt tilbake");
         		}
         		else{

@@ -8,7 +8,6 @@ public class Person implements Serializable{
     private String username;
 	private String password;
     private String name;
-	private MessageDigest md;
 
 	public Person(String username, String password, String name){
 		
@@ -30,7 +29,7 @@ public class Person implements Serializable{
 	
 	private String passwordHash(String s){
 		try{
-			md = MessageDigest.getInstance("MD5");
+			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(s.getBytes());
 			byte[] bytes = md.digest();
 			StringBuilder sb = new StringBuilder();
@@ -68,14 +67,6 @@ public class Person implements Serializable{
 	
 	public String getPassword(){
 		return password;
-	}
-
-	public MessageDigest getMd() {
-		return md;
-	}
-
-	public void setMd(MessageDigest md) {
-		this.md = md;
 	}
 
 	public void setPersonID(int personID) {
