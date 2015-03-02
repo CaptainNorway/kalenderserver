@@ -133,12 +133,11 @@ public class UserGroupQueries {
 			for(int i=0;i<usersList.size();i++){
 				prep.setInt(i+1, usersList.get(i).getUserGroupID());
 			}
-			System.out.println(prep.toString());
 			rs = prep.executeQuery();
 			while(rs.next()){
-				System.out.println("PersonID: " + rs.getInt(1) + " Name : " + rs.getString(2) 
-						+ " Username : " + rs.getString(3));
-				//persons.add(new Person(rs.getString(2), null));
+				//System.out.println("PersonID: " + rs.getInt(1) + " Name : " + rs.getString(2) 
+				//		+ " Username : " + rs.getString(3));
+				persons.add(new Person(rs.getString(3), rs.getString(2), rs.getInt(1)));
 			}
 			return persons;
 		}
