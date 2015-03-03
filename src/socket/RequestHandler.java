@@ -50,14 +50,14 @@ public class RequestHandler {
 		case "getUserGroups-calendar":
 			o = UserGroupQueries.getUserGroups(readCalendars());
 			break;
-		case "deleteUserGroup-usegroups":
+		case "deleteUserGroup-usergroups":
 			UserGroupQueries.deleteUserGroups(readUserGroups());
 			break;
 		case "createUserGroup-usergroup" :
 			UserGroup ug = readUserGroup();
-			UserGroupQueries.createEmptyUserGroup(ug.getName());
+			o = UserGroupQueries.createEmptyUserGroup(ug.getName());
 			break;
-		case "addUsers-userGroup" :
+		case "addUsers-usergroup" :
 			UserGroupQueries.addUsers(readUserGroup());
 			break;
 		// Calendar 
@@ -94,7 +94,7 @@ public class RequestHandler {
 			EventQueries.deleteEvent(readEvent());
 			break;
 		// Notification
-		case "getNotification-person":
+		case "getNotifications-person":
 			o = NotificationQueries.getNotifications(readPerson());
 			break;
 		case "setRead-notification-person":
@@ -116,8 +116,7 @@ public class RequestHandler {
 			PersonQueries.deletePerson(readPerson());
 			break;
 		case "authenticate-username-pass":
-			Person user = readPerson();
-			o = PersonQueries.authenticate(user);
+			o = PersonQueries.authenticate(readPerson());
 			break;
 		// Room
 		case "getRooms":
@@ -128,6 +127,7 @@ public class RequestHandler {
 			break;
 		default:
 			unknownCommand = true;
+			throw new IllegalArgumentException("Uknown command");
 		}
 		if(unknownCommand){
 			System.out.println("Ukjent kommando");
