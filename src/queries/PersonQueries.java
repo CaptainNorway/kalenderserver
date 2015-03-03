@@ -159,19 +159,19 @@ public class PersonQueries {
      * @param pass
      * @return boolean - authenticate True/False
      */
-    public static boolean authenticate(Person user) {
+    public static Person authenticate(Person user) {
 
         try {
             if (user.getPassword().equals(getPassword(user.getUsername()))) {
                 System.out.println("Login complete");
-                return true;
+                return getPerson(user.getUsername());
             } else {
                 System.out.println("Invalid Password");
-                return false;
+                return null;
             }
         } catch (Exception e) {
             System.out.println("Username doesn't exist");
-            return false;
+            return null;
         }
     }
 /*
