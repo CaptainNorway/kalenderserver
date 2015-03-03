@@ -1,3 +1,4 @@
+
 package queries;
 
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 import database.DBConnect;
 import models.Calendar;
+import models.Event;
 import models.Person;
 import models.UserGroup;
 
@@ -30,17 +32,22 @@ public class UserGroupQueries {
 	 * Creates an empty UserGroup with the given name
 	 * @param users
 	 */
-	public static void createEmptyUserGroup(String groupName){
+	public static UserGroup createEmptyUserGroup(String groupName){
 		Connection con = null;
 		PreparedStatement prep;
+		ResultSet rs;
 		try{
 			con = DBConnect.getConnection();
 			String query = "INSERT INTO UserGroup(GroupName) VALUES(?)";				
-			prep = con.prepareStatement(query);
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, groupName);
 			prep.execute();
+			rs = prep.getGeneratedKeys();
+			rs.next();
+			return new UserGroup(rs.getInt(1), groupName, null);
 		} catch(SQLException e){
 			System.out.println(e);
+			return null;
 		}
 	}
 	/**
@@ -241,7 +248,86 @@ public class UserGroupQueries {
 			return null;
 		}
 	}
-
+	
+	public static void removeUsers(UserGroup userGroup){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			
+			con = DBConnect.getConnection();
+			String query = "DELETE FROM `PersonUserGroup` "
+					+ "WHERE 'UserGroupID` = ? AND ( ";
+			for(int i=0;i<userGroup.getUsers().size(); i++){
+				if(i==0){
+					query += " OR ";
+				}
+				query += "PersonID = ? ";
+			}
+			prep = con.prepareStatement(query);
+			prep.setInt(1, userGroup.getUserGroupID());
+			
+			for(int i=0; i<userGroup.getUsers().size(); i++){
+				prep.setInt(i+2, userGroup.getUsers().get(i).getPersonID());
+			}
+			
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	public static void editUserGroup(UserGroup userGroup){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
+			String query = "DELETE FROM PersonUserGroup "
+					+ "WHERE UserGroupID = ? AND ( ";
+			for(int i=0;i<userGroup.getUsers().size(); i++){
+				if(i!=0){
+					query += " OR ";
+				}
+				query += "PersonID = ? ";
+			}
+			query += ");";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, userGroup.getUserGroupID());
+			
+			for(int i=0; i<userGroup.getUsers().size(); i++){
+				prep.setInt(i+2, userGroup.getUsers().get(i).getPersonID());
+			}
+			
+			prep.execute();
+			String query2 = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?) ";
+			prep = con.prepareStatement(query2);
+			for (Person person : userGroup.getUsers()){
+				prep.setInt(1, person.getPersonID());
+				prep.setInt(2, userGroup.getUserGroupID());
+				prep.addBatch();
+			}
+			
+			prep.executeBatch();
+			
+			String query3 = "UPDATE UserGroup "
+					+ "SET GroupName = ? "
+					+ "WHERE UserGroupID = ? ;";
+			
+			prep = con.prepareStatement(query3);
+			prep.setString(1, userGroup.getName());
+			prep.setInt(2, userGroup.getUserGroupID());
+			prep.executeUpdate();
+			con.commit();
+			prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
     /**
      HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
      Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement
@@ -350,5 +436,14 @@ public class UserGroupQueries {
 //				System.out.println("\t"+p.getName());
 //			}
 //		}
+		/*Edit usergroup testing*/ // gruppe 8 , legg til person 4
+//		ArrayList<Person> persons = new ArrayList<>();
+//		Person p1 = new Person(null, null, 4);
+//		Person p2 = new Person(null, null, 5);
+//		persons.add(p1);persons.add(p2);
+//		UserGroup ug = new UserGroup(8, "Sjefer", persons);
+//		System.out.println(ug.getUsers().size());
+//		editUserGroup(ug);
+		
     }
 }
