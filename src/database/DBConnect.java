@@ -2,27 +2,21 @@ package database;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import javax.sql.DataSource;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBConnect {
     public static DataSource getMySQLDataSource() {
-        Properties props = new Properties();
-        FileInputStream fis = null;
-        MysqlDataSource mysqlDS = null;
-        try {
-            fis = new FileInputStream("db.properties");
-            props.load(fis);
-            mysqlDS = new MysqlDataSource();
-            mysqlDS.setURL(props.getProperty("MYSQL_DB_URL"));
-            mysqlDS.setUser(props.getProperty("MYSQL_DB_USERNAME"));
-            mysqlDS.setPassword(props.getProperty("MYSQL_DB_PASSWORD"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    	String MYSQL_DB_DRIVER_CLASS="com.mysql.jdbc.Driver";
+    	String MYSQL_DB_URL="jdbc:mysql://mysql.stud.ntnu.no:3306/sondrehj_fellesprosjekt";
+    	String MYSQL_DB_USERNAME="sondrehj_fp";
+    	String MYSQL_DB_PASSWORD="1q2w3e4r";
+        
+    	MysqlDataSource mysqlDS = null;
+        mysqlDS = new MysqlDataSource();
+        mysqlDS.setURL(MYSQL_DB_URL);
+        mysqlDS.setUser(MYSQL_DB_USERNAME);
+        mysqlDS.setPassword(MYSQL_DB_PASSWORD);
         return mysqlDS;
     }
 
