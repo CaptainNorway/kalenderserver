@@ -21,6 +21,7 @@ public class MultipleSocketServer implements Runnable {
     public static void main(String[] args) {
         int port = 25025;
         int count = 0;
+        System.out.println("Fyrer opp badboyen");
         try {
             ServerSocket socket1 = new ServerSocket(port);
             System.out.println("MultipleSocketServer Initialized");
