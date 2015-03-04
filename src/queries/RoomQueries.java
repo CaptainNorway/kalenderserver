@@ -88,7 +88,7 @@ public class RoomQueries {
     	UserGroup ug = new UserGroup(1, null, null);
     	ArrayList<UserGroup> participants = new ArrayList<>();
     	participants.add(ug);
-    	Event event = new Event(99, "kaffe", participants, from, to, null);
+    	Event event = new Event(99, "kaffe", "Drikke 10 liter kaffe", participants, from, to, null);
     	
     	
         ArrayList<Room> rooms = getAvailableRooms(event);
