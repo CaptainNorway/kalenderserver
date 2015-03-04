@@ -10,15 +10,13 @@ public class Event implements Serializable{
     private int EventID;
     private Calendar cal;
     private String name;
-    private String note;
     private ArrayList<UserGroup> participants;
     private LocalDateTime from;
     private LocalDateTime to;
 
-    public Event(int EventID, String name, String note, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal) {
+    public Event(int EventID, String name, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal) {
         this.EventID = EventID;
         this.name = name;
-        this.note = note;
         this.participants = participants;
         this.from = from;
         this.to = to;
@@ -73,20 +71,14 @@ public class Event implements Serializable{
         EventID = eventID;
     }
 
-    public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	@Override
-	public String toString() {
-		return "Event [EventID=" + EventID + ", name=" + name + ", note="
-				+ note + ", participants=" + participants + ", from=" + from
-				+ ", to=" + to + "]";
-	}
-
-	
+    @Override
+    public String toString() {
+        return "Event(" +
+                "EventID: " + EventID +
+                ", EventName: " + name +
+                ", from: " + from +
+                ", to: " + to +
+                ", participants: " + participants +
+                ')' ;
+    }
 }

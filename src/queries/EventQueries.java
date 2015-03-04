@@ -48,7 +48,6 @@ public class EventQueries {
 	                int calendarID = result.getInt("CalendarID");
 	                String calendarName = result.getString("CalendarName");
 	                String eventName = result.getString("EventName");
-	                String eventNote = result.getString("EventNote");
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 	                System.out.println(result.getTimestamp("From").toString());
 	                LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
@@ -58,7 +57,7 @@ public class EventQueries {
 	                templist.add(new Calendar(calendarID, null, null));
 	
 	                Calendar calendar = new Calendar (calendarID, calendarName, null);
-	                events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar));
+	                events.add(new Event(eventID, eventName, null, from, to, calendar));
 	            }
 	            result.close();
 	            pstmt.close();
@@ -85,12 +84,11 @@ public class EventQueries {
 			con = DBConnect.getConnection();
 			con.setAutoCommit(false);
 			
-			String query = "INSERT INTO `Event`(`EventName`, `EventNote` `From`, `To`) VALUES (?, ?, ?, ?);";
+			String query = "INSERT INTO `Event`(`EventName`, `From`, `To`) VALUES (?, ?, ?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, event.getName());
-			prep.setString(2, event.getNote());
-			prep.setString(3, event.getFrom().toString());
-			prep.setString(4, event.getTo().toString());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
 			prep.executeUpdate();
 			ResultSet keys = prep.getGeneratedKeys();
 			keys.next();
@@ -121,16 +119,14 @@ public class EventQueries {
 			con = DBConnect.getConnection();
 			String query = "UPDATE `Event` "
 					+ "SET `EventName` = ?, "
-					+ "`EventNote` = ?, "
 					+ "`From` = ?, "
 					+ "`To` = ? "
 					+ "WHERE `EventID` = ?";				
 			prep = con.prepareStatement(query);
 			prep.setString(1, event.getName());
-			prep.setString(2, event.getNote());
-			prep.setString(3, event.getFrom().toString());
-			prep.setString(4, event.getTo().toString());
-			prep.setInt(5, event.getEventID());
+			prep.setString(2, event.getFrom().toString());
+			prep.setString(3, event.getTo().toString());
+			prep.setInt(4, event.getEventID());
 			System.out.println(prep.toString());
 			prep.execute();
 			System.out.println("Executed");
