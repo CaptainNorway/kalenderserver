@@ -85,7 +85,7 @@ public class EventQueries {
 			con = DBConnect.getConnection();
 			con.setAutoCommit(false);
 			
-			String query = "INSERT INTO `Event`(`EventName`, `EventNote` `From`, `To`) VALUES (?, ?, ?, ?);";
+			String query = "INSERT INTO `Event`(`EventName`, `EventNote`, `From`, `To`) VALUES (?, ?, ?, ?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, event.getName());
 			prep.setString(2, event.getNote());
