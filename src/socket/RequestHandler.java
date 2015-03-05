@@ -20,20 +20,20 @@ import models.Person;
 import models.UserGroup;
 
 public class RequestHandler {
-	
+
 	Socket connection;
 	ObjectInputStream ois;
-	
+
 	public RequestHandler(Socket connection){
 		this.connection = connection;
 		try{
-			ois = new ObjectInputStream(connection.getInputStream());		
+			ois = new ObjectInputStream(connection.getInputStream());
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Object executeCommand(Command command){
 		Object o = null;
 		boolean unknownCommand = false;
@@ -63,7 +63,7 @@ public class RequestHandler {
 		case "getPrivateUserGroups" :
 			o = UserGroupQueries.getPrivateUserGroups();
 			break;
-		// Calendar 
+		// Calendar
 		case "getCalendars-usergroup":
 			o = CalendarQueries.getCalendars(readUserGroup());
 			break;
@@ -96,6 +96,11 @@ public class RequestHandler {
 		case "deleteEvent-event":
 			EventQueries.deleteEvent(readEvent());
 			break;
+			case "updateAttends-event-usergroup-status":
+				Event event2 = readEvent();
+				UserGroup userGroup2 = readUserGroup();
+				Integer status = readInt();
+				EventQueries.updateAttends(event2, userGroup2, status);
 		// Notification
 		case "getNotifications-person":
 			o = NotificationQueries.getNotifications(readPerson());
@@ -137,7 +142,7 @@ public class RequestHandler {
 		}
 		return o;
 	}
-	
+
 	public Person readPerson(){
 		Person person = null;
 		try {
@@ -147,7 +152,7 @@ public class RequestHandler {
 			Object o = ois.readObject();
 			System.out.println("Person read!");
 			person = (Person) o;
-			
+
 		}  catch (ClassCastException e) {
 			System.out.println(e);
 		}
@@ -157,10 +162,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return person;
 	}
-	
+
 	public ArrayList<Person> readPersons(){
 		ArrayList<Person> persons = null;
 		try {
@@ -177,10 +182,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return persons;
 	}
-	
+
 	public ArrayList<UserGroup> readUserGroups(){
 		ArrayList<UserGroup> userGroups = null;
 		try {
@@ -197,10 +202,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return userGroups;
 	}
-	
+
 	public ArrayList<Calendar> readCalendars(){
 		ArrayList<Calendar> calendars = null;
 		try {
@@ -217,10 +222,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return calendars;
 	}
-	
+
 	public String readString(){
 		String string = null;
 		try {
@@ -237,10 +242,31 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return string;
 	}
-	
+
+	public int readInt(){
+		int value = 0;
+		try {
+			InputStream is = connection.getInputStream();
+			ObjectInputStream os = new ObjectInputStream(is);
+			Object o = os.readObject();
+			value = (Integer) o;
+		}  catch (ClassCastException e) {
+			System.out.println(e);
+		}
+		catch(ClassNotFoundException e){
+			System.out.println(e);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return value;
+	}
+
+
 	public UserGroup readUserGroup(){
 		UserGroup userGroup = null;
 		try {
@@ -257,10 +283,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return userGroup;
 	}
-	
+
 	public Calendar readCalendar(){
 		Calendar calendar = null;
 		try {
@@ -277,10 +303,10 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return calendar;
 	}
-	
+
 	public Event readEvent(){
 		Event event = null;
 		try {
@@ -297,7 +323,7 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return event;
 	}
 
@@ -317,7 +343,7 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return note;
 	}
 
@@ -337,7 +363,7 @@ public class RequestHandler {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return command;
 	}
 }
