@@ -60,6 +60,9 @@ public class RequestHandler {
 		case "addUsers-usergroup" :
 			UserGroupQueries.addUsers(readUserGroup());
 			break;
+		case "getPrivateUserGroups" :
+			o = UserGroupQueries.getPrivateUserGroups();
+			break;
 		// Calendar 
 		case "getCalendars-usergroup":
 			o = CalendarQueries.getCalendars(readUserGroup());

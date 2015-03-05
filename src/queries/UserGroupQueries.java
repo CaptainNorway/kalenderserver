@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import database.DBConnect;
@@ -233,7 +235,7 @@ public class UserGroupQueries {
 					userGroupIndex.number = userGroups.size()-1;
 				}
 				else{
-					//Gruppe finnes fra f�r , hent referanse
+					//Gruppe finnes fra f�r , hent referanse
 					userGroupIndex.number = userGroupIDs.indexOf(new Wrapper(userGroupID));
 				}
 				
@@ -328,6 +330,36 @@ public class UserGroupQueries {
 			System.out.println(e);
 		}
 	}
+	
+	/**
+	 * Henter alle private usergroups fra databasen. Altså userGroups som er individuelle for personer.
+	 * @return
+	 */
+	public static ArrayList<UserGroup> getPrivateUserGroups(){
+		Connection con = null;
+		PreparedStatement prep;
+		ArrayList<UserGroup> ug = new ArrayList<>();
+		try{
+			con = DBConnect.getConnection();
+			String query ="SELECT * FROM UserGroup WHERE Private = ?;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, 1);
+			prep.execute();
+			ResultSet result = prep.executeQuery();
+            while (result.next()) {
+                int userGroupID = result.getInt("UserGroupID");
+                String groupName= result.getString("GroupName");
+                ug.add(new UserGroup(userGroupID, groupName, null));
+            }
+            result.close();
+            prep.close();
+		    con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+		return ug;
+	}
+	
     /**
      HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
      Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement
