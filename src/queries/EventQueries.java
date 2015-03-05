@@ -78,7 +78,7 @@ public class EventQueries {
 	 * @param users
 	 */
 	
-	public static void createEvent(Event event){
+	public static Event createEvent(Event event){
 		Connection con = null;
 		PreparedStatement prep;
 		try{
@@ -103,10 +103,14 @@ public class EventQueries {
 			con.commit();
 
 			event.setEventID(key);
+
 			prep.close();
 		    con.close();
+		    
+		    return event;
 		} catch(SQLException e){
 			System.out.println(e);
+			return null;
 		}
 	}
 	
