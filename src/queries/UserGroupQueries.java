@@ -360,6 +360,34 @@ public class UserGroupQueries {
 		return ug;
 	}
 	
+	public static UserGroup getPersonalUserGroup(Person p){
+		Connection con = null;
+		PreparedStatement prep = null;
+		ResultSet rs;
+		UserGroup userGroup = null;
+		try{
+			con = DBConnect.getConnection();
+			String query = "SELECT * FROM UserGroup NATURAL JOIN PersonUserGroup WHERE Private = ? AND PersonID = ? ;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, 1);
+			prep.setInt(2, p.getPersonID());
+			rs = prep.executeQuery();
+			while(rs.next()){
+				int ugID = rs.getInt("UserGroupID");
+				String groupName = rs.getString("GroupName");
+				userGroup = new UserGroup(ugID, groupName, null);
+			}
+			rs.close();
+			prep.close();
+			con.close();
+		}
+		catch( SQLException e){
+			System.out.println(e);
+			return null;
+		}
+		return userGroup;
+	}
+	
     /**
      HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
      Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement
