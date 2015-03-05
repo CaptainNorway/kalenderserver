@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import models.Attendant;
 import models.Calendar;
 import models.Event;
 import models.Notification;
@@ -100,11 +101,10 @@ public class RequestHandler {
 		case "deleteEvent-event":
 			EventQueries.deleteEvent(readEvent());
 			break;
-		case "updateAttends-event-usergroup-status":
+		case "updateAttends-event-attendant":
 			Event event2 = readEvent();
-			UserGroup userGroup2 = readUserGroup();
-			Integer status = readInt();
-			EventQueries.updateAttends(event2, userGroup2, status);
+			Attendant attendant = readAttendant();
+			EventQueries.updateAttends(event2, attendant);
 		case "getAttendants-event":
 			Event event3 = readEvent();
 			EventQueries.getAttendants(event3);
@@ -212,6 +212,26 @@ public class RequestHandler {
 		}
 		return userGroups;
 	}
+	
+	public Attendant readAttendant(){
+		Attendant attendant = null;
+		try {
+			InputStream is = connection.getInputStream();
+			//ObjectInputStream os = new ObjectInputStream(is);
+			Object o = ois.readObject();
+			attendant = (Attendant) o;
+		}  catch (ClassCastException e) {
+			System.out.println(e);
+		}
+		catch(ClassNotFoundException e){
+			System.out.println(e);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return attendant;
+	}
 
 	public ArrayList<Calendar> readCalendars(){
 		ArrayList<Calendar> calendars = null;
@@ -252,27 +272,6 @@ public class RequestHandler {
 		}
 		return string;
 	}
-
-	public int readInt(){
-		int value = 0;
-		try {
-			InputStream is = connection.getInputStream();
-			ObjectInputStream os = new ObjectInputStream(is);
-			Object o = os.readObject();
-			value = (Integer) o;
-		}  catch (ClassCastException e) {
-			System.out.println(e);
-		}
-		catch(ClassNotFoundException e){
-			System.out.println(e);
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return value;
-	}
-
 
 	public UserGroup readUserGroup(){
 		UserGroup userGroup = null;

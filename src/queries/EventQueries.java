@@ -169,7 +169,7 @@ public class EventQueries {
 	 * Delete an event.
 	 * @param event
 	 */
-	public static void updateAttends(Event event, UserGroup usergroup, int status){
+	public static void updateAttends(Event event, Attendant attendant){
 
 		/* status: 0 = no response, 1 = Attends, 2 = Not attending*/
 		Connection con = null;
@@ -180,9 +180,9 @@ public class EventQueries {
 					+ "SET `Attends` = ? "
 					+ "WHERE `EventID` = ? AND `UserGroupID` = ?";
 			prep = con.prepareStatement(query);
-			prep.setInt(1, status);
+			prep.setInt(1, attendant.getStatus());
 			prep.setInt(2, event.getEventID());
-			prep.setInt(3, usergroup.getUserGroupID());
+			prep.setInt(3, attendant.getUserGroupID());
 			System.out.println(prep.toString());
 			prep.execute();
 			System.out.println("Executed");
