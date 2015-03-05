@@ -101,6 +101,10 @@ public class RequestHandler {
 				UserGroup userGroup2 = readUserGroup();
 				Integer status = readInt();
 				EventQueries.updateAttends(event2, userGroup2, status);
+
+			case "getAttendants-event":
+				Event event3 = readEvent();
+				EventQueries.getAttendants(event3);
 		// Notification
 		case "getNotifications-person":
 			o = NotificationQueries.getNotifications(readPerson());
