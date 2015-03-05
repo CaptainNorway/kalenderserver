@@ -63,7 +63,7 @@ public class CalendarQueries {
      * Creates an empty Calendar from a Calendar-object.
      * @param calendar
      */
-    public static void createCalendar(Calendar calendar) {
+    public static Calendar createCalendar(Calendar calendar) {
         Connection con = DBConnect.getConnection();
         //Execute query
         try {
@@ -72,12 +72,16 @@ public class CalendarQueries {
                             + "(CalendarID, CalendarName) VALUES"
                             + "(null, ?)";
 
-            PreparedStatement pstmt = con.prepareStatement(sql);
+            PreparedStatement pstmt = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, calendar.getName());
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
             System.out.println("Calendar: " + calendar.toString() + "was created");
             pstmt.close();
             con.close();
+            rs.next();
+            calendar.setCalendarID(rs.getInt(1));
+            return calendar;
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }

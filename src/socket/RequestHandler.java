@@ -75,7 +75,7 @@ public class RequestHandler {
 			CalendarQueries.removeUserGroup(calendar2, usergroup2);
 			break;
 		case "createCalendar-calendar" :
-			CalendarQueries.createCalendar(readCalendar());
+			o = CalendarQueries.createCalendar(readCalendar());
 			break;
 		case "deleteCalendar-calendar" :
 			CalendarQueries.deleteCalendar(readCalendar());
@@ -85,7 +85,7 @@ public class RequestHandler {
 			o = EventQueries.getEvents(readCalendars());
 			break;
 		case "createEvent-event" :
-			EventQueries.createEvent(readEvent());
+			o = EventQueries.createEvent(readEvent());
 			break;
 		case "editEvent-event" :
 			EventQueries.editEvent(readEvent());
