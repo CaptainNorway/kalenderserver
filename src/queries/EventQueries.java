@@ -10,10 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import database.DBConnect;
-import models.Event;
-import models.Calendar;
-import models.Person;
-import models.UserGroup;
+import models.*;
 import queries.CalendarQueries;
 
 public class EventQueries {
@@ -194,6 +191,35 @@ public class EventQueries {
 		} catch(SQLException e){
 			System.out.println(e);
 		}
+	}
+
+	public static ArrayList<Attendant> getAttendants (Event event){
+
+		ArrayList<Attendant> attends = null;
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "SELECT * FROM Attends NATURAL JOIN UserGroup WHERE EventID = ? ;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			System.out.println(prep.toString());
+			//prep.execute();
+			System.out.println("Executed");
+			ResultSet rs = prep.executeQuery();
+			while (rs.next()) {
+				int userGroupID = rs.getInt("UserGroupID");
+				String name = rs.getString("GroupName");
+				int attends_status = rs.getInt("Attends");
+				attends.add(new Attendant(userGroupID, name, attends_status));
+			}
+			rs.close();
+			prep.close();
+			con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+		return attends;
 	}
 
 
