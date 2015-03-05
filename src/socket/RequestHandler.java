@@ -63,6 +63,10 @@ public class RequestHandler {
 		case "getPrivateUserGroups" :
 			o = UserGroupQueries.getPrivateUserGroups();
 			break;
+		case "getPersonalUserGroup-person" :
+			Person p2 = readPerson();
+			o = UserGroupQueries.getPersonalUserGroup(p2);
+			break;
 		// Calendar
 		case "getCalendars-usergroup":
 			o = CalendarQueries.getCalendars(readUserGroup());
@@ -96,15 +100,14 @@ public class RequestHandler {
 		case "deleteEvent-event":
 			EventQueries.deleteEvent(readEvent());
 			break;
-			case "updateAttends-event-usergroup-status":
-				Event event2 = readEvent();
-				UserGroup userGroup2 = readUserGroup();
-				Integer status = readInt();
-				EventQueries.updateAttends(event2, userGroup2, status);
-
-			case "getAttendants-event":
-				Event event3 = readEvent();
-				EventQueries.getAttendants(event3);
+		case "updateAttends-event-usergroup-status":
+			Event event2 = readEvent();
+			UserGroup userGroup2 = readUserGroup();
+			Integer status = readInt();
+			EventQueries.updateAttends(event2, userGroup2, status);
+		case "getAttendants-event":
+			Event event3 = readEvent();
+			EventQueries.getAttendants(event3);
 		// Notification
 		case "getNotifications-person":
 			o = NotificationQueries.getNotifications(readPerson());
