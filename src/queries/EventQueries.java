@@ -105,14 +105,25 @@ public class EventQueries {
 			ResultSet keys = prep.getGeneratedKeys();
 			keys.next();
 			int key = keys.getInt(1);
+			event.setEventID(key);
 
 			query = "INSERT INTO CalendarEvent(CalendarID, EventID) SELECT ?, LAST_INSERT_ID();";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, event.getCal().getCalendarID());
 			prep.executeUpdate();
+			
+			query = "INSERT INTO Attends(UserGroupID, EventID, Attends) VALUES (?,?,?);";
+			prep = con.prepareStatement(query);
+			for (UserGroup ug : event.getParticipants()){
+				prep.setInt(1, ug.getUserGroupID());
+				prep.setInt(2, event.getEventID());
+				prep.setInt(3, 0);
+				prep.addBatch();
+			}
+			int[] updateCounts = prep.executeBatch();
+			checkUpdateCounts(updateCounts);
+			
 			con.commit();
-
-			event.setEventID(key);
 
 			prep.close();
 			con.close();
@@ -215,6 +226,7 @@ public class EventQueries {
 		PreparedStatement prep;
 		try{
 			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
 			String query = "INSERT INTO Attends(UserGroupID, EventID, Attends) VALUES (?,?,?);";
 			prep = con.prepareStatement(query);
 			for (UserGroup ug : attendant){
