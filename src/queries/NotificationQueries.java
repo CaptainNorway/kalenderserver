@@ -62,7 +62,7 @@ public static ArrayList<Notification> getNotifications(Person person){
 			notifications.add(new Notification(rs.getInt("NoteID"), rs.getString("Note"), 
 			new UserGroup(rs.getInt("UserGroupID"), rs.getString("GroupName"), null), 
 			null, new Event(rs.getInt("EventID"), rs.getString("EventName"), rs.getString("EventNote"), null, 
-			LocalDateTime.parse(rs.getTimestamp("From").toString(), formatter), LocalDateTime.parse(rs.getTimestamp("To").toString(), formatter), null)));
+			LocalDateTime.parse(rs.getTimestamp("From").toString(), formatter), LocalDateTime.parse(rs.getTimestamp("To").toString(), formatter), null), rs.getInt("IsInvite")));
 		}
 		rs.close();
 		prep.close();
