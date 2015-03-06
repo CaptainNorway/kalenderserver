@@ -37,9 +37,9 @@ public class NotificationQueries {
 * @return ArrayList<Notification> - liste over alle notifikasjoner for person-parameteren.
 * @throws SQLException
 */
-public static ArrayList<Notification> getNotifications(Person person){
+public static ArrayList<Notification> getNotifications(UserGroup person){
 	ArrayList<Notification> notifications = new ArrayList<Notification>();
-	int personID = person.getPersonID();
+	int personID = person.getUserGroupID();
 	Connection con = null;
 	PreparedStatement prep = null;
 	ResultSet rs;
@@ -48,10 +48,9 @@ public static ArrayList<Notification> getNotifications(Person person){
 		String query = "SELECT *\n" 
 		+ "FROM Notification\n"
 		+"NATURAL JOIN UserGroup\n"
-		+"NATURAL JOIN Person\n"
 		+"NATURAL JOIN HasRead\n"
 		+"NATURAL JOIN Event\n"
-		+"WHERE PersonID = ? AND HasRead = 0\n";
+		+"WHERE UserGroupID = ? AND HasRead = 0\n";
 		prep = con.prepareStatement(query);
 		prep.setInt(1, personID);
 		rs = prep.executeQuery();
@@ -89,31 +88,32 @@ public static void setNotification(Notification notification){
 	try{
 		con = DBConnect.getConnection();
 		con.setAutoCommit(false);
-		String query = "INSERT INTO Notification(EventID, Note, UserGroupID) VALUES (?,?,?);";
+		String query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 		prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		prep.setInt(1, notification.getEvent().getEventID());
 		prep.setString(2, notification.getNote());
 		prep.setInt(3, notification.getSender().getUserGroupID());
+		prep.setInt(4, notification.isInvite());
 		prep.executeUpdate();
 		ResultSet keys = prep.getGeneratedKeys();
 		keys.next();
 		int noteKey = keys.getInt(1);
 		notification.setNoteID(noteKey);
 		
-		query = "SELECT PersonID FROM Attends WHERE EventID = ?;";
+		query = "SELECT UserGroupID FROM Attends WHERE EventID = ?;";
 		prep = con.prepareStatement(query);
 		prep.setInt(1, notification.getEvent().getEventID());
 		ResultSet result = prep.executeQuery();
 		ArrayList<Integer> personKeys = new ArrayList<Integer>();
         while (result.next()) {
-            personKeys.add(result.getInt("PersonID"));
+            personKeys.add(result.getInt("UserGroupID"));
         }
         result.close();
         
-		query = "INSERT INTO HasRead(PersonID, NoteID, HasRead) VALUES (?,?,?);";
+		query = "INSERT INTO HasRead(UserGroupID, NoteID, HasRead) VALUES (?,?,?);";
 		prep = con.prepareStatement(query);
-		for (int personID : personKeys){
-			prep.setInt(1, personID);
+		for (int userID : personKeys){
+			prep.setInt(1, userID);
 			prep.setInt(2, noteKey);
 			prep.setInt(3, 0);
 			prep.addBatch();
@@ -133,16 +133,16 @@ public static void setNotification(Notification notification){
  */
 
 
-public static void setRead(Notification notification, Person person){
+public static void setRead(Notification notification, UserGroup ug){
 	int noteID = notification.getNoteID();
-	int personID = person.getPersonID();
+	int userID = ug.getUserGroupID();
 	Connection con = null;
 	PreparedStatement prep;
 	try{
 		con = DBConnect.getConnection();
-		String query = "UPDATE HasRead \n SET HasRead = 1\n WHERE PersonID = ? AND NoteID = ?";
+		String query = "UPDATE HasRead \n SET HasRead = 1\n WHERE UserGroupID = ? AND NoteID = ?";
 		prep = con.prepareStatement(query);
-		prep.setInt(1, personID);
+		prep.setInt(1, userID);
 		prep.setInt(2, noteID);
 		prep.executeUpdate();
 		prep.close();

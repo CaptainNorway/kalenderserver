@@ -115,12 +115,12 @@ public class RequestHandler {
 			EventQueries.getAttendants(event3);
 		// Notification
 		case "getNotifications-person":
-			o = NotificationQueries.getNotifications(readPerson());
+			o = NotificationQueries.getNotifications(readUserGroup());
 			break;
 		case "setRead-notification-person":
 			Notification note = readNotification();
-			Person person = readPerson();
-			NotificationQueries.setRead(note, person);
+			UserGroup ug5 = readUserGroup();
+			NotificationQueries.setRead(note, ug5);
 			break;
 		case "setNotification-notification":
 			NotificationQueries.setNotification(readNotification());
