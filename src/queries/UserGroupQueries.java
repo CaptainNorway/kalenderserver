@@ -388,6 +388,38 @@ public class UserGroupQueries {
 		return userGroup;
 	}
 	
+	/**
+	 * Lite brukt men nødvendig 1 plass. let it be.
+	 * @param ug
+	 * @return
+	 */
+	public static UserGroup getUserGroup(UserGroup ug){
+		Connection con = null;
+		PreparedStatement prep = null;
+		ResultSet rs;
+		UserGroup userGroup = null;
+		try{
+			con = DBConnect.getConnection();
+			String query = "SELECT * FROM UserGroup WHERE UserGroupID = ? ;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, ug.getUserGroupID());
+			rs = prep.executeQuery();
+			while(rs.next()){
+				int ugID = rs.getInt("UserGroupID");
+				String groupName = rs.getString("GroupName");
+				userGroup = new UserGroup(ugID, groupName, null);
+			}
+			rs.close();
+			prep.close();
+			con.close();
+		}
+		catch( SQLException e){
+			System.out.println(e);
+			return null;
+		}
+		return userGroup;
+	}
+	
     /**
      HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
      Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement

@@ -45,21 +45,15 @@ public static ArrayList<Notification> getNotifications(UserGroup person){
 	ResultSet rs;
 	try{
 		con = DBConnect.getConnection();
-		String query = "SELECT *\n" 
-		+ "FROM Notification\n"
-		+"NATURAL JOIN UserGroup\n"
-		+"NATURAL JOIN HasRead\n"
-		+"NATURAL JOIN Event\n"
-		+"WHERE UserGroupID = ? AND HasRead = 0\n";
+		con.setAutoCommit(false);
+		String query = "SELECT * FROM Notification JOIN Event ON Notification.EventID = Event.EventID JOIN HasRead ON Notification.NoteID = HasRead.NoteID JOIN UserGroup ON UserGroup.UserGroupID = HasRead.UserGroupID WHERE HasRead.UserGroupID = ? AND HasRead.HasRead = 0;";
 		prep = con.prepareStatement(query);
 		prep.setInt(1, personID);
 		rs = prep.executeQuery();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 		while(rs.next()){
-			System.out.println(rs.getTimestamp("To").toString());
-			System.out.println(rs.getTimestamp("From").toString());
-			notifications.add(new Notification(rs.getInt("NoteID"), rs.getString("Note"), 
-			new UserGroup(rs.getInt("UserGroupID"), rs.getString("GroupName"), null), 
+			notifications.add(new Notification(rs.getInt("Notification.NoteID"), rs.getString("Note"), 
+			UserGroupQueries.getUserGroup(new UserGroup(rs.getInt("Notification.UserGroupID"), null, null)), 
 			null, new Event(rs.getInt("EventID"), rs.getString("EventName"), rs.getString("EventNote"), null, 
 			LocalDateTime.parse(rs.getTimestamp("From").toString(), formatter), LocalDateTime.parse(rs.getTimestamp("To").toString(), formatter), null), rs.getInt("IsInvite")));
 		}
