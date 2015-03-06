@@ -2,6 +2,7 @@ package queries;
 
 import database.DBConnect;
 import models.Event;
+import models.Notification;
 import models.Person;
 import models.Room;
 import models.UserGroup;
@@ -10,9 +11,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+
 import queries.EventQueries;
 
 public class RoomQueries {
@@ -82,6 +85,60 @@ public class RoomQueries {
     		return null;
     	}
     }
+    
+	/**
+	 * Books a room in the database and delete previous bookings for the meeting if it exists.
+	 * @param ev
+	 * @param room
+	 */
+    public static void bookRoom(Event ev, Room room){
+    	Connection con = null;
+    	PreparedStatement prep;
+    	try{
+    		con = DBConnect.getConnection();
+    		con.setAutoCommit(false);
+    		String query = "DELETE FROM Meeting WHERE EventID = ? ;";
+    		prep = con.prepareStatement(query);
+    		prep.setInt(1, ev.getEventID());
+    		prep.executeUpdate();
+    		
+    		query = "INSERT INTO Meeting(EventID, RoomName) VALUES (?,?)";
+    		prep = con.prepareStatement(query);
+    		prep.setInt(1, ev.getEventID());
+    		prep.setString(2, room.getRoomName());
+    		prep.executeUpdate();
+    		con.commit();
+    		prep.close();
+    		con.close();
+    	} catch(SQLException e){
+    		System.out.println(e);
+    	}
+    }
+    
+    public static Room getEventRoom(Event ev){
+    	Room room = null;
+    	try{
+    		Connection con = DBConnect.getConnection();
+    		String sqlQuery = "SELECT * FROM Meeting NATURAL JOIN Room WHERE EventID = ? ;";
+    		PreparedStatement prep = con.prepareStatement(sqlQuery);
+    		prep.setInt(1, ev.getEventID());
+    		ResultSet resultSet = prep.executeQuery();
+    		while(resultSet.next()){
+    			String roomName = resultSet.getString("RoomName");
+    			int capacity = resultSet.getInt("Capacity");
+    			room = new Room(roomName, capacity);
+    		}
+    		resultSet.close();
+    		prep.close();
+    		con.close();
+    		return room;
+    	}
+    	catch(SQLException e){
+    		System.out.println(e);
+    		return null;
+    	}
+    }
+    /*
     public static void main(String[] args) {
     	LocalDateTime from = LocalDateTime.of(2015,3, 11, 20, 15);
     	LocalDateTime to= LocalDateTime.of(2015, 3, 11, 20, 15);
@@ -96,8 +153,7 @@ public class RoomQueries {
     	for (Room room : rooms) {
     		System.out.println(room);
     	}
-        
-    	
   }
+  */
 }
 

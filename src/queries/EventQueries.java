@@ -14,6 +14,18 @@ import models.*;
 import queries.CalendarQueries;
 
 public class EventQueries {
+	
+	public static void checkUpdateCounts(int[] updateCounts) {
+		for (int i = 0; i < updateCounts.length; i++) {
+			if (updateCounts[i] >= 0) {
+				System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
+			} else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
+				System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
+			} else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
+				System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
+			}
+		}
+	}
 
 	/**
 	 * Get all the evens from an ArrayList of calendars.
@@ -166,7 +178,7 @@ public class EventQueries {
 	}
 
 	/**
-	 * Delete an event.
+	 * Update attendants.
 	 * @param event
 	 */
 	public static void updateAttends(Event event, Attendant attendant){
@@ -186,6 +198,34 @@ public class EventQueries {
 			System.out.println(prep.toString());
 			prep.execute();
 			System.out.println("Executed");
+			prep.close();
+			con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Delete an event.
+	 * @param event
+	 */
+	public static void setAttends(Event event, ArrayList<UserGroup> attendant){
+		/* status: 0 = no response, 1 = Attends, 2 = Not attending*/
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "INSERT INTO Attends(UserGroupID, EventID, Attends) VALUES (?,?,?);";
+			prep = con.prepareStatement(query);
+			for (UserGroup ug : attendant){
+				prep.setInt(1, ug.getUserGroupID());
+				prep.setInt(2, event.getEventID());
+				prep.setInt(3, 0);
+				prep.addBatch();
+			}
+			int[] updateCounts = prep.executeBatch();
+			checkUpdateCounts(updateCounts);
+			con.commit();
 			prep.close();
 			con.close();
 		} catch(SQLException e){

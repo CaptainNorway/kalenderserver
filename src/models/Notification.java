@@ -10,13 +10,15 @@ public class Notification implements Serializable{
 	private String note;
 	private UserGroup sender;
 	private Event event;
+	private int isInvite;
 
-    public Notification(int noteID,String note, UserGroup sender, ArrayList<UserGroup> receivers,Event event){
+    public Notification(int noteID,String note, UserGroup sender, ArrayList<UserGroup> receivers,Event event, int isInvite){
     	this.noteID = noteID;
 		this.receivers = receivers;
 		this.sender = sender;
 		this.note = note;
 		this.event = event;
+		this.isInvite = isInvite;
 	}
     
     public int getNoteID(){
@@ -38,8 +40,8 @@ public class Notification implements Serializable{
 	public Event getEvent() {
 		return event;
 	}
-	
-	public void setNoteID(int noteID){
+
+	public void setNoteID(int noteID) {
 		this.noteID = noteID;
 	}
 
@@ -59,9 +61,17 @@ public class Notification implements Serializable{
 		this.event = event;
 	}
 
+	public int isInvite() {
+		return isInvite;
+	}
+
+	public void setInvite(int isInvite) {
+		this.isInvite = isInvite;
+	}
+
 	@Override
 	public String toString() {
-		return "Notification (receivers: " + receivers + ", note: " + note
+		return "Notification(receivers: " + receivers + ", note: " + note
 				+ ", sender: " + sender + ", event: " + event + ")";
 	}
 }
