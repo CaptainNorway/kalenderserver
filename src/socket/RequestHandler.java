@@ -18,6 +18,7 @@ import models.Calendar;
 import models.Event;
 import models.Notification;
 import models.Person;
+import models.Room;
 import models.UserGroup;
 
 public class RequestHandler {
@@ -105,6 +106,10 @@ public class RequestHandler {
 			Event event2 = readEvent();
 			Attendant attendant = readAttendant();
 			EventQueries.updateAttends(event2, attendant);
+		case "setAttendants-event-attendants":
+			Event event4 = readEvent();
+			ArrayList<UserGroup> ug2 = readUserGroups();
+			EventQueries.setAttends(event4, ug2);
 		case "getAttendants-event":
 			Event event3 = readEvent();
 			EventQueries.getAttendants(event3);
@@ -140,14 +145,42 @@ public class RequestHandler {
 		case "getAvailableRooms-event":
 			o = RoomQueries.getAvailableRooms(readEvent());
 			break;
+		case "bookRoom-event-room":
+			Event ev2 = readEvent();
+			Room room2 = readRoom();
+			RoomQueries.bookRoom(ev2, room2);
+			break;
+		case "getEventRoom-event":
+			o = RoomQueries.getEventRoom(readEvent());
 		default:
 			unknownCommand = true;
-			throw new IllegalArgumentException("Uknown command");
+			throw new IllegalArgumentException("Unknown command");
 		}
 		if(unknownCommand){
 			System.out.println("Ukjent kommando");
 		}
 		return o;
+	}
+
+	public Room readRoom() {
+		Room room = null;
+		try{
+			InputStream is = connection.getInputStream();
+			System.out.println("Reading room");
+			Object o = ois.readObject();
+			System.out.println("Room read!");
+			room = (Room) o;
+		}catch (ClassCastException e) {
+			System.out.println(e);
+		}
+		catch(ClassNotFoundException e){
+			System.out.println(e);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return room;
 	}
 
 	public Person readPerson(){
