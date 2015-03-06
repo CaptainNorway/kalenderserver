@@ -106,7 +106,7 @@ public class RequestHandler {
 			Event event2 = readEvent();
 			Attendant attendant = readAttendant();
 			EventQueries.updateAttends(event2, attendant);
-		case "setAttendants-event-attendants":
+		case "setAttends-event-attendants":
 			Event event4 = readEvent();
 			ArrayList<UserGroup> ug2 = readUserGroups();
 			EventQueries.setAttends(event4, ug2);
