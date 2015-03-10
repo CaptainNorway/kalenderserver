@@ -372,7 +372,6 @@ public class UserGroupQueries {
 			String query = "SELECT * FROM UserGroup NATURAL JOIN PersonUserGroup WHERE Private = ? AND PersonID = ? ;";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, 1);
-            System.out.println("DENNE MÅ IKKE BLI 0:    " + p.getPersonID());
             prep.setInt(2, p.getPersonID());
 
 			rs = prep.executeQuery();
