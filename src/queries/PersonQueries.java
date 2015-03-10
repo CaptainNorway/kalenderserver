@@ -37,12 +37,13 @@ public class PersonQueries {
             rs.next();
             int personID = rs.getInt("PersonID");
             String name = rs.getString("Name");
+            String flag = rs.getString("Flag");
 
             rs.close();
             pstmt.close();
             con.close();
 
-            return new Person(username, name, personID);
+            return new Person(username, name, personID, flag);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
