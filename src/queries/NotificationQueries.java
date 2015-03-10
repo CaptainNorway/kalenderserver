@@ -109,7 +109,11 @@ public static void setNotification(Notification notification){
 		for (int userID : personKeys){
 			prep.setInt(1, userID);
 			prep.setInt(2, noteKey);
-			prep.setInt(3, 0);
+			if(userID == notification.getSender().getUserGroupID()){
+				prep.setInt(3, 1);
+			}else{
+				prep.setInt(3, 0);
+			}
 			prep.addBatch();
 		}
 		int[] updateCounts = prep.executeBatch();
