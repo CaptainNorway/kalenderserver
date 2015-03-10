@@ -7,17 +7,20 @@ public class Person implements Serializable {
     private int personID;
     private String username;
     private String password;
+    private String salt;
     private String name;
 
-    public Person(String username, String password, String name) {
+    public Person(String username, String password, String name, String salt) {
         this.name = name;
         this.username = username;
-        this.password = passwordHash(password);
+        this.password = passwordHash(password, salt);
+        this.salt = salt;
     }
 
-    public Person(String username, String password) {
+    public Person(String username, String password, String salt) {
         this.username = username;
-        this.password = passwordHash(password);
+        this.password = passwordHash(password, salt);
+        this.salt = salt;
     }
 
     public Person(String username, String name, int personID) {
@@ -26,28 +29,29 @@ public class Person implements Serializable {
         this.personID = personID;
     }
 
-    private String passwordHash(String s) {
+    private String passwordHash(String password, String salt) {
         try {
+            String passwordToEncrypt = "" + password + salt;
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(s.getBytes());
+            md.update(passwordToEncrypt.getBytes());
             byte[] bytes = md.digest();
             StringBuilder sb = new StringBuilder();
             for(int i =0; i<bytes.length; i++) {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
-            s = sb.toString();
-            System.out.println("MD= " + s);
-            return s;
+            String saltedPassword = sb.toString();
+            System.out.println("salted password: " + saltedPassword);
+            return saltedPassword;
         }
         catch(Exception e) {
-            System.out.println("nei");
+            System.out.println("passwordHash sier nei");
             e.printStackTrace();
         }
         return null;
     }
 
     /**
-     * Fetches the persons registered name and personID fromt the database
+     * Fetches the persons registered name and personID from the database
      */
     private void fetchNameAndID() {
         //get info from database
@@ -69,6 +73,8 @@ public class Person implements Serializable {
         return password;
     }
 
+    public String getSalt() { return salt; }
+
     public void setPersonID(int personID) {
         this.personID = personID;
     }
@@ -81,6 +87,8 @@ public class Person implements Serializable {
         this.password = password;
     }
 
+    public void setSalt(String salt) { this.salt = salt; }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -88,7 +96,7 @@ public class Person implements Serializable {
     @Override
     public String toString() {
         return "Person(personID: " + personID + ", username=" + username
-                + ", password: " + password + ", name: " + name + ")";
+                + ", password: " + password + ", salt: " + salt + ", name: " + name + ")";
     }
 
     @Override
