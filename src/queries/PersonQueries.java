@@ -43,7 +43,7 @@ public class PersonQueries {
             pstmt.close();
             con.close();
 
-            return new Person(personID, username, "", name, "", flag);
+            return new Person(personID, username, name, flag);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
@@ -162,7 +162,7 @@ public class PersonQueries {
         }
     }
 
-    public static Person getSalt(String username) {
+    public static Person getSalt(Person p) {
 
         Person saltWrapper;
         Connection con = DBConnect.getConnection();
@@ -170,12 +170,12 @@ public class PersonQueries {
         try {
             String sql = "SELECT Salt FROM Person WHERE Username = ?;";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, username);
+            pstmt.setString(1, p.getUsername());
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             String salt = rs.getString("Salt");
 
-            saltWrapper = new Person("", "", salt);
+            saltWrapper = new Person(p.getUsername(), null, salt);
 
             rs.close();
             pstmt.close();
@@ -210,7 +210,7 @@ public class PersonQueries {
     }
 
     public static void main(String[] agrs) {
-        System.out.println(getSalt("Sondrehh").getSalt());
+        //System.out.println(getSalt("Sondrehh").getSalt());
         //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         //deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         //Scanner user_input = new Scanner(System.in);

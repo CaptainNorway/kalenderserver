@@ -148,7 +148,7 @@ public class UserGroupQueries {
 			}
 			rs = prep.executeQuery();
 			while(rs.next()){
-				persons.add(new Person(rs.getInt(1), rs.getString(3), "", rs.getString(2), "" , rs.getString(4)));
+				persons.add(new Person(rs.getInt("PersonID"), rs.getString("Username"), rs.getString("Name"), rs.getString("Flag")));
 			}
 			return persons;
 		}
@@ -241,7 +241,7 @@ public class UserGroupQueries {
 					userGroupIndex.number = userGroupIDs.indexOf(new Wrapper(userGroupID));
 				}
 				
-				Person dbPerson = new Person(rs.getInt("PersonID"), rs.getString("Username"), "", rs.getString("Name"), "" , rs.getString("Flag"));
+				Person dbPerson = new Person(rs.getInt("PersonID"), rs.getString("Username"), rs.getString("Name"), rs.getString("Flag"));
 				userGroups.get(userGroupIndex.number).addUser(dbPerson);
 				
 			}
@@ -376,6 +376,7 @@ public class UserGroupQueries {
             prep.setInt(2, p.getPersonID());
 
 			rs = prep.executeQuery();
+			System.out.println("PERSON ID : " + p.getPersonID());
 			while(rs.next()){
 				int ugID = rs.getInt("UserGroupID");
 				String groupName = rs.getString("GroupName");
