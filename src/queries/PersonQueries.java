@@ -2,10 +2,13 @@ package queries;
 
 import database.DBConnect;
 import models.Person;
+
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -61,11 +64,18 @@ public class PersonQueries {
             con = DBConnect.getConnection();
             con.setAutoCommit(false);
 
-            String query = "INSERT INTO Person (Username, Password, Name) VALUES (?, ?, ?);";
+            String query = "INSERT INTO Person (Username, Password, Salt, Name, Flag) VALUES (?, ?, ?, ?, ?);";
             prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, person.getUsername());
             prep.setString(2, person.getPassword());
-            prep.setString(3, person.getName());
+            /* Create salt */
+            final Random r = new SecureRandom();
+            byte[] salt = new byte[32];
+            r.nextBytes(salt);
+            prep.setBytes(3, salt);
+            prep.setString(4, person.getName());
+            prep.setString(5, "u");
+
             prep.executeUpdate();
             ResultSet keys = prep.getGeneratedKeys();
             keys.next();
@@ -151,12 +161,34 @@ public class PersonQueries {
         }
     }
 
+    public static String getSalt(String username) {
+
+        String salt;
+        Connection con = DBConnect.getConnection();
+        //Execute query
+        try {
+            String sql = "SELECT Salt FROM Person WHERE Username = ?;";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            salt = rs.getString("Salt");
+
+            rs.close();
+            pstmt.close();
+            con.close();
+            return salt;
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
     /**
      * Authenticate a user provided the username & password.
      * Uses {@link #getPassword(String) getPassword} method
      *
-     * @param username
-     * @param pass
+     *
      * @return boolean - authenticate True/False
      */
     public static Person authenticate(Person user) {
@@ -174,15 +206,19 @@ public class PersonQueries {
             return null;
         }
     }
-/*
+
     public static void main(String[] agrs) {
         //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
-        deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
-        Scanner user_input = new Scanner(System.in);
-        System.out.println("Username: ");
-        String username = user_input.next();
-        System.out.println("Password: ");
-        String pass = user_input.next();
-        System.out.println(authenticate(username, pass));
-    }*/
+        //deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
+        //Scanner user_input = new Scanner(System.in);
+        //System.out.println("Username: ");
+        //String username = user_input.next();
+        //System.out.println("Password: ");
+        //String pass = user_input.next();
+        //System.out.println(authenticate(username, pass));
+       //final Random r = new SecureRandom();
+       //byte[] salt = new byte[32];
+       //r.nextBytes(salt);
+       //System.out.println(salt);
+    }
 }
