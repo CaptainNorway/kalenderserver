@@ -69,6 +69,10 @@ public class RequestHandler {
 			Person p2 = readPerson();
 			o = UserGroupQueries.getPersonalUserGroup(p2);
 			break;
+        case "getSalt" :
+            String username = readString();
+            o = PersonQueries.getSalt(username);
+            break;
 		// Calendar
 		case "getCalendars-usergroup":
 			o = CalendarQueries.getCalendars(readUserGroup());
