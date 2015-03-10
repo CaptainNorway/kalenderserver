@@ -24,10 +24,11 @@ public class Person implements Serializable {
         this.salt = salt;
     }
 
-    public Person(String username, String name, int personID, String flag) {
+    public Person(int id, String username, String password, String name, String salt , String flag) {
         this.username = username;
+        this.password = passwordHash(password, salt);
+        this.salt = salt;
         this.name = name;
-        this.personID = personID;
         this.flag = flag;
     }
 

@@ -43,7 +43,7 @@ public class PersonQueries {
             pstmt.close();
             con.close();
 
-            return new Person(username, name, personID, flag);
+            return new Person(personID, username, "", name, "", flag);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
