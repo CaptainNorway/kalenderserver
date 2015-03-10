@@ -161,9 +161,9 @@ public class PersonQueries {
         }
     }
 
-    public static String getSalt(String username) {
+    public static Person getSalt(String username) {
 
-        String salt;
+        Person saltWrapper;
         Connection con = DBConnect.getConnection();
         //Execute query
         try {
@@ -172,12 +172,14 @@ public class PersonQueries {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            salt = rs.getString("Salt");
+            String salt = rs.getString("Salt");
+
+            saltWrapper = new Person("", "", salt);
 
             rs.close();
             pstmt.close();
             con.close();
-            return salt;
+            return saltWrapper;
 
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
@@ -192,7 +194,6 @@ public class PersonQueries {
      * @return boolean - authenticate True/False
      */
     public static Person authenticate(Person user) {
-
         try {
             if (user.getPassword().equals(getPassword(user.getUsername()))) {
                 System.out.println("Login complete");
@@ -208,6 +209,7 @@ public class PersonQueries {
     }
 
     public static void main(String[] agrs) {
+        System.out.println(getSalt("Sondrehh").getSalt());
         //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         //deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
         //Scanner user_input = new Scanner(System.in);
