@@ -9,6 +9,7 @@ public class Person implements Serializable {
     private String password;
     private String salt;
     private String name;
+    private String flag;
 
     public Person(String username, String password, String name, String salt) {
         this.name = name;
@@ -23,10 +24,11 @@ public class Person implements Serializable {
         this.salt = salt;
     }
 
-    public Person(String username, String name, int personID) {
+    public Person(String username, String name, int personID, String flag) {
         this.username = username;
         this.name = name;
         this.personID = personID;
+        this.flag = flag;
     }
 
     private String passwordHash(String password, String salt) {
@@ -74,6 +76,10 @@ public class Person implements Serializable {
     }
 
     public String getSalt() { return salt; }
+
+    public String getFlag() {
+        return flag;
+    }
 
     public void setPersonID(int personID) {
         this.personID = personID;
