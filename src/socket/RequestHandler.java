@@ -68,9 +68,9 @@ public class RequestHandler {
                 Person p2 = readPerson();
                 o = UserGroupQueries.getPersonalUserGroup(p2);
                 break;
-            case "getSalt":
+            case "getSalt-person":
                 Person p3 = readPerson();
-                o = PersonQueries.getSalt(p3.getUsername());
+                o = PersonQueries.getSalt(p3);
                 break;
 
             // Calendar
