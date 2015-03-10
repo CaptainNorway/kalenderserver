@@ -70,8 +70,8 @@ public class RequestHandler {
 			o = UserGroupQueries.getPersonalUserGroup(p2);
 			break;
         case "getSalt" :
-            String username = readString();
-            o = PersonQueries.getSalt(username);
+            Person p3 = readPerson();
+            o = PersonQueries.getSalt(p3.getUsername());
             break;
 		// Calendar
 		case "getCalendars-usergroup":
@@ -290,25 +290,25 @@ public class RequestHandler {
 		return calendars;
 	}
 
-	public String readString(){
-		String string = null;
-		try {
-			InputStream is = connection.getInputStream();
-			ObjectInputStream os = new ObjectInputStream(is);
-			Object o = os.readObject();
-			string = (String) o;
-		}  catch (ClassCastException e) {
-			System.out.println(e);
-		}
-		catch(ClassNotFoundException e){
-			System.out.println(e);
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return string;
-	}
+//	public String readString(){
+//		String string = null;
+//		try {
+//			InputStream is = connection.getInputStream();
+//			ObjectInputStream os = new ObjectInputStream(is);
+//			Object o = os.readObject();
+//			string = (String) o;
+//		}  catch (ClassCastException e) {
+//			System.out.println(e);
+//		}
+//		catch(ClassNotFoundException e){
+//			System.out.println(e);
+//		}
+//		catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return string;
+//	}
 
 	public UserGroup readUserGroup(){
 		UserGroup userGroup = null;
