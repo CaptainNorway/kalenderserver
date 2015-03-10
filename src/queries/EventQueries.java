@@ -247,7 +247,7 @@ public class EventQueries {
 
 	public static ArrayList<Attendant> getAttendants (Event event){
 
-		ArrayList<Attendant> attends = null;
+		ArrayList<Attendant> attends = new ArrayList<Attendant>();
 		Connection con = null;
 		PreparedStatement prep;
 		try{
@@ -255,9 +255,6 @@ public class EventQueries {
 			String query = "SELECT * FROM Attends NATURAL JOIN UserGroup WHERE EventID = ? ;";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, event.getEventID());
-			System.out.println(prep.toString());
-			//prep.execute();
-			System.out.println("Executed");
 			ResultSet rs = prep.executeQuery();
 			while (rs.next()) {
 				int userGroupID = rs.getInt("UserGroupID");
