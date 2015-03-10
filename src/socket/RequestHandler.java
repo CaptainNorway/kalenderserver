@@ -110,13 +110,16 @@ public class RequestHandler {
 			Event event2 = readEvent();
 			Attendant attendant = readAttendant();
 			EventQueries.updateAttends(event2, attendant);
+			break;
 		case "setAttends-event-attendants":
 			Event event4 = readEvent();
 			ArrayList<UserGroup> ug2 = readUserGroups();
 			EventQueries.setAttends(event4, ug2);
+			break;
 		case "getAttendants-event":
 			Event event3 = readEvent();
-			EventQueries.getAttendants(event3);
+			o = EventQueries.getAttendants(event3);
+			break;
 		// Notification
 		case "getNotifications-person":
 			o = NotificationQueries.getNotifications(readUserGroup());
@@ -128,6 +131,7 @@ public class RequestHandler {
 			break;
 		case "setNotification-notification":
 			NotificationQueries.setNotification(readNotification());
+			break;
 		// Person
 		case "getPerson-person":
 			Person p = readPerson();
@@ -156,6 +160,7 @@ public class RequestHandler {
 			break;
 		case "getEventRoom-event":
 			o = RoomQueries.getEventRoom(readEvent());
+			break;
 		default:
 			unknownCommand = true;
 			throw new IllegalArgumentException("Unknown command");
