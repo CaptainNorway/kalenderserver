@@ -51,7 +51,7 @@ public class RequestHandler {
             case "getUserGroups-calendar":
                 o = UserGroupQueries.getUserGroups(readCalendars());
                 break;
-            case "deleteUserGroup-usergroups":
+            case "deleteUserGroups-usergroups":
                 UserGroupQueries.deleteUserGroups(readUserGroups());
                 break;
             case "createUserGroup-usergroup":

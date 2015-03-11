@@ -175,7 +175,7 @@ public class UserGroupQueries {
 				if(i!=0){
 					query += " OR ";
 				}
-				query += " UserGroupID = ? ";
+				query += "UserGroupID = ? ";
 			}
 			prep = con.prepareStatement(query);
 			for(int i = 0; i<userGroupList.size();i++){

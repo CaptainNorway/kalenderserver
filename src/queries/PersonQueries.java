@@ -109,19 +109,23 @@ public class PersonQueries {
         PreparedStatement prep;
         //Execute query
         try {
-
             con = DBConnect.getConnection();
             con.setAutoCommit(false);
 
-            String query = "DELETE FROM Person WHERE Username = ?;";
+            String query = "DELETE FROM Person WHERE Name = ?;";
             prep = con.prepareStatement(query);
-            prep.setString(1, person.getUsername());
+            prep.setString(1, person.getUsername()); //OBJEKTET DEN MOTTAR HAR NAME SOM USERNAME
             prep.executeUpdate();
 
             query = "DELETE FROM UserGroup WHERE GroupName = ? AND private = ?;";
             prep = con.prepareStatement(query);
-            prep.setString(1, person.getName());
+            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
             prep.setInt(2, 1);
+            prep.executeUpdate();
+
+            query = "DELETE FROM Calendar WHERE CalendarName = ?;";
+            prep = con.prepareStatement(query);
+            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
             prep.executeUpdate();
             
             con.commit();
