@@ -38,7 +38,8 @@ public class Attendant implements Serializable{
 	}
 
 	@Override
-    public String toString(){
-        return name;
-    }
+	public String toString() {
+		return "Attendant [userGroupID=" + userGroupID + ", name=" + name
+				+ ", status=" + status + "]";
+	}
 }

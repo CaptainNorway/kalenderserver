@@ -101,8 +101,8 @@ public class RequestHandler {
             case "createEvent-event":
                 o = EventQueries.createEvent(readEvent());
                 break;
-            case "editEvent-event":
-                EventQueries.editEvent(readEvent());
+            case "editEvent-event-usergroup":
+                EventQueries.editEvent(readEvent(), readUserGroup());
                 break;
             case "deleteEvent-event":
                 EventQueries.deleteEvent(readEvent());
