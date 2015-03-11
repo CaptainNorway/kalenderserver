@@ -11,23 +11,16 @@ public class Person implements Serializable {
     private String name;
     private String flag;
 
-    public Person(String username, String password, String name, String salt) {
-        this.name = name;
-        this.username = username;
-        this.password = passwordHash(password, salt);
-        this.salt = salt;
-    }
-
     public Person(String username, String password, String salt) {
         this.username = username;
         this.password = passwordHash(password, salt);
         this.salt = salt;
     }
 
-    public Person(String username, String name, int personID, String flag) {
-        this.username = username;
-        this.name = name;
+    public Person(int personID, String username, String name, String flag) {
         this.personID = personID;
+    	this.username = username;
+        this.name = name;
         this.flag = flag;
     }
 
@@ -42,7 +35,6 @@ public class Person implements Serializable {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             String saltedPassword = sb.toString();
-            System.out.println("salted password: " + saltedPassword);
             return saltedPassword;
         }
         catch(Exception e) {

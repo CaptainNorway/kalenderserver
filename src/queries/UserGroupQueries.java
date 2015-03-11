@@ -18,37 +18,41 @@ import models.UserGroup;
 
 public class UserGroupQueries {
 
-	// getUserGroup(Calendar)
+    /**
+     * Checks update counts.
+     * @param updateCounts
+     */
 	private static void checkUpdateCounts(int[] updateCounts) {
-	    for (int i = 0; i < updateCounts.length; i++) {
-	      if (updateCounts[i] >= 0) {
-	        System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
-	      } else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
-	        System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
-	      } else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
-	        System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
-	      }
-	    }
-	  }
+        for (int i = 0; i < updateCounts.length; i++) {
+            if (updateCounts[i] >= 0) {
+                System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
+            } else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
+                System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
+            } else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
+                System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
+            }
+        }
+    }
+
 	/**
-	 * Creates an empty UserGroup with the given name
-	 * @param users
+	 * Creates an empty UserGroup with the given name.
+	 * @param name
 	 */
-	public static UserGroup createEmptyUserGroup(String groupName){
+	public static UserGroup createEmptyUserGroup(String name){
 		Connection con = null;
 		PreparedStatement prep;
 		ResultSet rs;
 		try{
 			con = DBConnect.getConnection();
-			String query = "INSERT INTO UserGroup(GroupName) VALUES(?)";				
+			String query = "INSERT INTO UserGroup(GroupName) VALUES(?)";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			prep.setString(1, groupName);
+			prep.setString(1, name);
 			prep.execute();
 			rs = prep.getGeneratedKeys();
 			rs.next();
-			return new UserGroup(rs.getInt(1), groupName, null);
+			return new UserGroup(rs.getInt(1), name, null);
 		} catch(SQLException e){
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -129,7 +133,7 @@ public class UserGroupQueries {
 		}
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT DISTINCT Person.PersonID, Person.Name, Person.Username "
+			String query = "SELECT DISTINCT Person.PersonID, Person.Name, Person.Username, Person.Flag"
 					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
 					+ "WHERE ";
 			for(int i=0; i<usersList.size();i++){
@@ -144,9 +148,7 @@ public class UserGroupQueries {
 			}
 			rs = prep.executeQuery();
 			while(rs.next()){
-				//System.out.println("PersonID: " + rs.getInt(1) + " Name : " + rs.getString(2) 
-				//		+ " Username : " + rs.getString(3));
-				persons.add(new Person(rs.getString(3), rs.getString(2), rs.getInt(1)));
+				persons.add(new Person(rs.getInt("PersonID"), rs.getString("Username"), rs.getString("Name"), rs.getString("Flag")));
 			}
 			return persons;
 		}
@@ -200,7 +202,7 @@ public class UserGroupQueries {
 		ArrayList<UserGroup> userGroups = new ArrayList<UserGroup>();
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT UserGroupID, PersonID, Username, Name, GroupName "
+			String query = "SELECT UserGroupID, PersonID, Username, Name, GroupName, Flag "
 					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
 					+ "WHERE EXISTS ( "
 					+ "SELECT UserGroupID "
@@ -239,7 +241,7 @@ public class UserGroupQueries {
 					userGroupIndex.number = userGroupIDs.indexOf(new Wrapper(userGroupID));
 				}
 				
-				Person dbPerson = new Person(rs.getString("Username"), rs.getString("Name"), rs.getInt("PersonID"));
+				Person dbPerson = new Person(rs.getInt("PersonID"), rs.getString("Username"), rs.getString("Name"), rs.getString("Flag"));
 				userGroups.get(userGroupIndex.number).addUser(dbPerson);
 				
 			}
@@ -370,8 +372,10 @@ public class UserGroupQueries {
 			String query = "SELECT * FROM UserGroup NATURAL JOIN PersonUserGroup WHERE Private = ? AND PersonID = ? ;";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, 1);
-			prep.setInt(2, p.getPersonID());
+            prep.setInt(2, p.getPersonID());
+
 			rs = prep.executeQuery();
+			System.out.println("PERSON ID : " + p.getPersonID());
 			while(rs.next()){
 				int ugID = rs.getInt("UserGroupID");
 				String groupName = rs.getString("GroupName");
