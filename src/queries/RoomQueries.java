@@ -175,7 +175,7 @@ public class RoomQueries {
     	//	System.out.println(room);
     	//}
 		
-		updateLocation(new Event(116, null,null,null,null,null,null), new Room("Rommet til Nikolai", 0));
+		//updateLocation(new Event(116, null,null,null,null,null,null), new Room("Rommet til Nikolai", 0));
 		
   }
   
