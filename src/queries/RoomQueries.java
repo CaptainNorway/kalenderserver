@@ -1,11 +1,7 @@
 package queries;
 
 import database.DBConnect;
-import models.Event;
-import models.Notification;
-import models.Person;
-import models.Room;
-import models.UserGroup;
+import models.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -138,22 +134,50 @@ public class RoomQueries {
     		return null;
     	}
     }
-    /*
+
+	public static void updateLocation(Event event, Room room){
+
+		/* status: 0 = no response, 1 = Attends, 2 = Not attending*/
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "UPDATE `Meeting` "
+					+ "SET `RoomName` = ? "
+					+ "WHERE `EventID` = ?";
+			prep = con.prepareStatement(query);
+			prep.setString(1, room.getRoomName());
+			prep.setInt(2, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			System.out.println("Executed");
+			prep.close();
+			con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	
+    
     public static void main(String[] args) {
-    	LocalDateTime from = LocalDateTime.of(2015,3, 11, 20, 15);
-    	LocalDateTime to= LocalDateTime.of(2015, 3, 11, 20, 15);
-    	UserGroup ug = new UserGroup(1, null, null);
-    	ArrayList<UserGroup> participants = new ArrayList<>();
-    	participants.add(ug);
-    	Event event = new Event(99, "kaffe", "Drikke 10 liter kaffe", participants, from, to, null);
-    	
-    	
-        ArrayList<Room> rooms = getAvailableRooms(event);
-        System.out.println("Printing a list of the room entries in the database table ROOM:");
-    	for (Room room : rooms) {
-    		System.out.println(room);
-    	}
+    	//LocalDateTime from = LocalDateTime.of(2015,3, 11, 20, 15);
+    	//LocalDateTime to= LocalDateTime.of(2015, 3, 11, 20, 15);
+    	//UserGroup ug = new UserGroup(1, null, null);
+    	//ArrayList<UserGroup> participants = new ArrayList<>();
+    	//participants.add(ug);
+    	//Event event = new Event(99, "kaffe", "Drikke 10 liter kaffe", participants, from, to, null);
+    	//
+    	//
+        //ArrayList<Room> rooms = getAvailableRooms(event);
+        //System.out.println("Printing a list of the room entries in the database table ROOM:");
+    	//for (Room room : rooms) {
+    	//	System.out.println(room);
+    	//}
+		
+		updateLocation(new Event(116, null,null,null,null,null,null), new Room("Rommet til Nikolai", 0));
+		
   }
-  */
+  
 }
 

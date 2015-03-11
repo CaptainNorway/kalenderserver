@@ -157,6 +157,11 @@ public class RequestHandler {
             case "getAvailableRooms-event":
                 o = RoomQueries.getAvailableRooms(readEvent());
                 break;
+			case "updateLocation-event-room":
+				Event ev4 = readEvent();
+				Room room3 = readRoom();
+				RoomQueries.updateLocation(ev4, room3);
+				break;
             case "bookRoom-event-room":
                 Event ev2 = readEvent();
                 Room room2 = readRoom();
