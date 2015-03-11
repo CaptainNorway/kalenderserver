@@ -44,11 +44,10 @@ public class UserGroup implements Serializable{
 
     @Override
     public String toString() {
-        return name;
-//        return "UserGroup[" +
-//                "userGroupID: " + userGroupID +
-//                ", name: '" + name +
-//                ", users: " + users +
-//                ']';
+        return "UserGroup[" +
+                "userGroupID: " + userGroupID +
+                ", name: '" + name +
+                ", users: " + users +
+                ']';
     }
 }
