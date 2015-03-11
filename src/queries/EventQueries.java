@@ -208,7 +208,22 @@ public class EventQueries {
 			prep.setInt(3, attendant.getUserGroupID());
 			System.out.println(prep.toString());
 			prep.execute();
-			System.out.println("Executed");
+			UserGroup ug = new UserGroup(attendant.getUserGroupID(), attendant.getName(), null);
+			ArrayList<Calendar> cals = CalendarQueries.getCalendars(ug);
+			int calID = -1;
+			for (Calendar cal : cals){
+				if (cal.getName().equals(attendant.getName())){
+					calID = cal.getCalendarID();
+					break;
+				}
+			}
+			if (calID != -1){
+				query = "INSERT INTO `CalendarEvent`(`CalendarID`, `EventID`) VALUES (?,?) ;";
+				prep = con.prepareStatement(query);
+				prep.setInt(1, calID);
+				prep.setInt(2, event.getEventID());
+				prep.execute();
+			}
 			prep.close();
 			con.close();
 		} catch(SQLException e){
