@@ -4,16 +4,30 @@ package queries;
 import database.DBConnect;
 import models.Calendar;
 import models.UserGroup;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 public class CalendarQueries {
 
+	
+	public static void checkUpdateCounts(int[] updateCounts) {
+		for (int i = 0; i < updateCounts.length; i++) {
+			if (updateCounts[i] >= 0) {
+				System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
+			} else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
+				System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
+			} else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
+				System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
+			}
+		}
+	}
+	
     /**
      * Adds a given UserGroup to a given Calendar.
      * @param calendar
      * @param usergroup 
-     */
+     */	
     public static void addUserGroup(Calendar calendar, UserGroup usergroup) {
 
         Connection con = DBConnect.getConnection();
@@ -68,20 +82,33 @@ public class CalendarQueries {
         Connection con = DBConnect.getConnection();
         //Execute query
         try {
+        	con.setAutoCommit(false);
             String sql =
                     "INSERT INTO Calendar"
-                            + "(CalendarID, CalendarName) VALUES"
-                            + "(null, ?)";
+                            + "(CalendarName) VALUES"
+                            + " (?);";
 
             PreparedStatement pstmt = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, calendar.getName());
             pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            System.out.println("Calendar: " + calendar.toString() + "was created");
+            ResultSet keys = pstmt.getGeneratedKeys();
+            keys.next();
+            calendar.setCalendarID(keys.getInt(1));
+            keys.close();
+            
+    		sql = "INSERT INTO UserCalendar(UserGroupID, CalendarID) VALUES (?,?); ";
+    		pstmt = con.prepareStatement(sql);
+    		for (UserGroup ug : calendar.getUserGroups()){
+    			pstmt.setInt(1, ug.getUserGroupID());
+    			pstmt.setInt(2, calendar.getCalendarID());
+    			pstmt.addBatch();
+    		}
+    		int[] updateCounts = pstmt.executeBatch();
+    		checkUpdateCounts(updateCounts);
+    		con.commit();
             pstmt.close();
             con.close();
-            rs.next();
-            calendar.setCalendarID(rs.getInt(1));
+            
             return calendar;
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
