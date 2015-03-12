@@ -27,7 +27,7 @@ public class EventQueries {
 	 * Get all the evens from an ArrayList of calendars.
 	 * @param cal
 	 */
-	public static ArrayList<Event> getEvents(ArrayList<Calendar> cal){
+	public static ArrayList<Event> getEvents(ArrayList<Calendar> cal, UserGroup ug){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ArrayList<Event> events = new ArrayList<>();
@@ -35,17 +35,17 @@ public class EventQueries {
 			try {
 				conn = DBConnect.getConnection();
 				conn.setAutoCommit(false);
-				String query = "SELECT * FROM Calendar NATURAL JOIN CalendarEvent NATURAL JOIN Event WHERE ";
+				String query = "SELECT DISTINCT * FROM Calendar NATURAL JOIN CalendarEvent NATURAL JOIN Event NATURAL JOIN Attends WHERE ";
 				for (int i = 0; i< cal.size(); i++) {
-					System.out.println("In loop");
 					if (i != 0){
 						query += "OR ";
 					}
-					query = query + "CalendarID = ? ";
+					query = query + "(CalendarID = ? AND UserGroupID = ? )";
 				}
 				pstmt = conn.prepareStatement(query);
-				for (int i = 0; i < cal.size(); i++) {
-					pstmt.setInt(i+1, cal.get(i).getCalendarID());
+				for (int i = 0; i/2 < cal.size(); i+=2) {
+					pstmt.setInt(i+1, cal.get(i/2).getCalendarID());
+					pstmt.setInt(i+2, ug.getUserGroupID());
 				}
 
 				ResultSet result = pstmt.executeQuery();
@@ -59,12 +59,13 @@ public class EventQueries {
 					System.out.println(result.getTimestamp("From").toString());
 					LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
 					LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
+					int attends = result.getInt("Attends");
 
 					ArrayList<Calendar> templist = new ArrayList<>();
 					templist.add(new Calendar(calendarID, null, null));
 
 					Calendar calendar = new Calendar (calendarID, calendarName, null);
-					events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar));
+					events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar, attends));
 				}
 				result.close();
 				pstmt.close();
