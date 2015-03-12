@@ -95,8 +95,10 @@ public class RequestHandler {
                 break;
 
             // Event
-            case "getEvents-calendars":
-                o = EventQueries.getEvents(readCalendars());
+            case "getEvents-calendars-usergroup":
+            	ArrayList<Calendar> cals2 = readCalendars();
+            	UserGroup ug5 = readUserGroup();
+                o = EventQueries.getEvents(cals2,ug5);
                 break;
             case "createEvent-event":
                 o = EventQueries.createEvent(readEvent());
@@ -128,8 +130,8 @@ public class RequestHandler {
                 break;
             case "setRead-notification-person":
                 Notification note = readNotification();
-                UserGroup ug5 = readUserGroup();
-                NotificationQueries.setRead(note, ug5);
+                UserGroup ug6 = readUserGroup();
+                NotificationQueries.setRead(note, ug6);
                 break;
             case "setNotification-notification":
                 NotificationQueries.setNotification(readNotification());

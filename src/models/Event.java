@@ -14,6 +14,7 @@ public class Event implements Serializable{
     private ArrayList<UserGroup> participants;
     private LocalDateTime from;
     private LocalDateTime to;
+    private int attends;
 
     public Event(int EventID, String name, String note, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal) {
         this.EventID = EventID;
@@ -23,6 +24,17 @@ public class Event implements Serializable{
         this.from = from;
         this.to = to;
         this.cal = cal;
+    }
+    
+    public Event(int EventID, String name, String note, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal, int attends) {
+        this.EventID = EventID;
+        this.name = name;
+        this.note = note;
+        this.participants = participants;
+        this.from = from;
+        this.to = to;
+        this.cal = cal;
+        this.attends = attends;
     }
 
     public ArrayList<UserGroup> getParticipants() {
@@ -79,6 +91,14 @@ public class Event implements Serializable{
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public int getAttends() {
+		return attends;
+	}
+
+	public void setAttends(int attends) {
+		this.attends = attends;
 	}
 
 	@Override
