@@ -52,16 +52,15 @@ public class PersonQueries {
     /**
      * Creates a person given a Person-object.
      *
-     * @param person - Format: username, password, name
+     * @param person - Format: username, password (hash), salt, name, flag
      */
     public static void createPerson(Person person) {
 
         String pass;
         Connection con;
         PreparedStatement prep;
-        //Execute query
-        try {
 
+        try {
             con = DBConnect.getConnection();
             con.setAutoCommit(false);
 
@@ -69,13 +68,9 @@ public class PersonQueries {
             prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, person.getUsername());
             prep.setString(2, person.getPassword());
-            /* Create salt */
-            final Random r = new SecureRandom();
-            byte[] salt = new byte[32];
-            r.nextBytes(salt);
-            prep.setBytes(3, salt);
+            prep.setString(3, person.getSalt());
             prep.setString(4, person.getName());
-            prep.setString(5, "u");
+            prep.setString(5, person.getFlag());
 
             prep.executeUpdate();
             ResultSet keys = prep.getGeneratedKeys();
@@ -83,14 +78,31 @@ public class PersonQueries {
             int key = keys.getInt(1);
 
             query = "INSERT INTO UserGroup(GroupName, Private) VALUES (?, ?);";
-            prep = con.prepareStatement(query);
+            prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             prep.setString(1, person.getName());
             prep.setInt(2, 1);
             prep.executeUpdate();
+            ResultSet keys3 = prep.getGeneratedKeys();
+            keys3.next();
+            int userGroupID = keys3.getInt(1);
 
             query = "INSERT INTO PersonUserGroup (PersonID, UserGroupID) VALUES(?, LAST_INSERT_ID())";
             prep = con.prepareStatement(query);
             prep.setInt(1, key);
+            prep.executeUpdate();
+
+            query = "INSERT INTO Calendar (CalendarName) VALUES(?)";
+            prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            prep.setString(1, person.getName());
+            prep.executeUpdate();
+            ResultSet keysInt = prep.getGeneratedKeys();
+            keysInt.next();
+            int calendarID = keysInt.getInt(1);
+
+            query = "INSERT INTO UserCalendar (UserGroupID, CalendarID) VALUES(?, ?)";
+            prep = con.prepareStatement(query);
+            prep.setInt(1, userGroupID);
+            prep.setInt(2, calendarID);
             prep.executeUpdate();
 
             con.commit();

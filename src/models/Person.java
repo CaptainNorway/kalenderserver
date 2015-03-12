@@ -1,7 +1,8 @@
 package models;
 
+import utilities.Password;
+
 import java.io.Serializable;
-import java.security.MessageDigest;
 
 public class Person implements Serializable {
     private int personID;
@@ -13,35 +14,23 @@ public class Person implements Serializable {
 
     public Person(String username, String password, String salt) {
         this.username = username;
-        this.password = passwordHash(password, salt);
+        this.password = Password.hashPassword(password, salt);
         this.salt = salt;
     }
 
-    public Person(int personID, String username, String name, String flag) {
-        this.personID = personID;
-    	this.username = username;
+    public Person(String username, String password, String salt, String name, String flag) {
+        this.username = username;
+        this.password = Password.hashPassword(password, salt);
+        this.salt = salt;
         this.name = name;
         this.flag = flag;
     }
 
-    private String passwordHash(String password, String salt) {
-        try {
-            String passwordToEncrypt = "" + password + salt;
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(passwordToEncrypt.getBytes());
-            byte[] bytes = md.digest();
-            StringBuilder sb = new StringBuilder();
-            for(int i =0; i<bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            String saltedPassword = sb.toString();
-            return saltedPassword;
-        }
-        catch(Exception e) {
-            System.out.println("passwordHash sier nei");
-            e.printStackTrace();
-        }
-        return null;
+    public Person(int personID, String username, String name, String flag) {
+        this.personID = personID;
+        this.username = username;
+        this.name = name;
+        this.flag = flag;
     }
 
     /**
