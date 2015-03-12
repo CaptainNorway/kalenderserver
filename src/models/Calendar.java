@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Calendar implements Serializable {
-    
+
     int CalendarID;
     String name;
     ArrayList<UserGroup> userGroups;
     ArrayList<Event> events;
-
+    int colorID = 0;
+    
     public Calendar(int calendarID, String name, ArrayList<UserGroup> userGroups) {
         CalendarID = calendarID;
         this.name = name;
@@ -42,12 +43,11 @@ public class Calendar implements Serializable {
 
     @Override
     public String toString() {
-
-        return "Calendar{" +
-                "CalendarID=" + CalendarID +
-                ", name='" + name + '\'' +
-                ", userGroups=" + userGroups +
-                '}';
+        return "Calendar(" +
+                "CalendarID: " + CalendarID +
+                ", name: " + name  +
+                ", userGroups subscribed: " + userGroups +
+                ')';
     }
     
     public void setEvents(ArrayList<Event> events){
@@ -57,4 +57,13 @@ public class Calendar implements Serializable {
     public ArrayList<Event> getEvents(){
     	return events;
     }
+
+	public int getColorID() {
+		return colorID;
+	}
+
+	public void setColorID(int colorID) {
+		this.colorID = colorID;
+	}
+    
 }
