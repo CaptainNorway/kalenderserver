@@ -123,27 +123,41 @@ public class PersonQueries {
         try {
             con = DBConnect.getConnection();
             con.setAutoCommit(false);
-
-            String query = "DELETE FROM Person WHERE Name = ?;";
+            
+            String query = "SELECT COUNT(*) AS total FROM Person WHERE Name = ? AND Flag = ? ;";
             prep = con.prepareStatement(query);
-            prep.setString(1, person.getUsername()); //OBJEKTET DEN MOTTAR HAR NAME SOM USERNAME
-            prep.executeUpdate();
-
-            query = "DELETE FROM UserGroup WHERE GroupName = ? AND private = ?;";
-            prep = con.prepareStatement(query);
-            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
-            prep.setInt(2, 1);
-            prep.executeUpdate();
-
-            query = "DELETE FROM Calendar WHERE CalendarName = ?;";
-            prep = con.prepareStatement(query);
-            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
-            prep.executeUpdate();
+            prep.setString(1, person.getUsername());
+            prep.setString(2, "a");
+            ResultSet rs = prep.executeQuery();
+            rs.next();
+            int count = rs.getInt("total");
+            
+            if (count == 0){
+	            query = "DELETE FROM Person WHERE Name = ? AND Flag = ?;";
+	            prep = con.prepareStatement(query);
+	            prep.setString(1, person.getUsername()); //OBJEKTET DEN MOTTAR HAR NAME SOM USERNAME
+	            prep.setString(2, "u");
+	            prep.executeUpdate();
+	
+	            query = "DELETE FROM UserGroup WHERE GroupName = ? AND private = ?;";
+	            prep = con.prepareStatement(query);
+	            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
+	            prep.setInt(2, 1);
+	            prep.executeUpdate();
+	
+	            query = "DELETE FROM Calendar WHERE CalendarName = ?;";
+	            prep = con.prepareStatement(query);
+	            prep.setString(1, person.getUsername()); //SE KOMMENTAR OVER
+	            prep.executeUpdate();
+	            System.out.println(person + " was deleted");
+            }else{
+            	System.out.println(person + " is admin and can not be deleted.");
+            }
             
             con.commit();
             prep.close();
             con.close();
-            System.out.println(person + " was deleted");
+            
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
