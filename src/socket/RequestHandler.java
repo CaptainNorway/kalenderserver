@@ -77,6 +77,9 @@ public class RequestHandler {
             case "getCalendars-usergroup":
                 o = CalendarQueries.getCalendars(readUserGroup());
                 break;
+            case "getAllCalendars":
+                o = CalendarQueries.getAllCalendars();
+                break;
             case "addUserGroup-calendar":
                 Calendar calendar = readCalendar();
                 UserGroup usergroup = readUserGroup();
