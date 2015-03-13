@@ -170,6 +170,29 @@ public class CalendarQueries {
         }
     }
 
+    public static ArrayList<Calendar> getAllCalendars() {
+        ArrayList<Calendar> calendars = new ArrayList<>();
+        Connection con = DBConnect.getConnection();
+        //Execute query
+        try {
+            String sql = "SELECT * FROM Calendar";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int CalendarID = rs.getInt("CalendarID");
+                String CalendarName = rs.getString("CalendarName");
+                calendars.add(new Calendar(CalendarID, CalendarName, null));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+            return calendars;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
+    
     /**
      * Get all UserGroups of a given calendar. Used by getCalendars(UserGroup)
      * @param CalendarID - The ID of the Calendar
