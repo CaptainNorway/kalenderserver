@@ -184,10 +184,13 @@ public class EventQueries {
 				}
 			}
 			if (calID != -1){
-				query = "INSERT INTO `CalendarEvent`(`CalendarID`, `EventID`) VALUES (?,?) ;";
+				query = "INSERT INTO `CalendarEvent`(`CalendarID`, `EventID`) SELECT DISTINCT ?,? FROM Calendar "
+						+ "WHERE NOT EXISTS (SELECT * FROM UserCalendar JOIN CalendarEvent ON UserCalendar.CalendarID = CalendarEvent.CalendarID WHERE CalendarEvent.EventID = ? AND UserCalendar.UserGroupID = ?) ;";
 				prep = con.prepareStatement(query);
 				prep.setInt(1, calID);
 				prep.setInt(2, event.getEventID());
+				prep.setInt(3, event.getEventID());
+				prep.setInt(4, attendant.getUserGroupID());
 				prep.execute();
 			}
 			prep.close();
@@ -196,6 +199,7 @@ public class EventQueries {
 			System.out.println(e);
 		}
 	}
+
 	
 	/**
 	 * Delete an event.
