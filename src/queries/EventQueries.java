@@ -104,7 +104,7 @@ public class EventQueries {
 				LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
 				LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
 				Calendar calendar = new Calendar (calendarID, null, null);
-				events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar));
+				events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar,-1));
 			}
 			result.close();
 			pstmt.close();
