@@ -175,14 +175,66 @@ public class EventQueries {
 	public static void deleteEvent(Event event){
 		Connection con = null;
 		PreparedStatement prep;
+		ArrayList<UserGroup> ugs = new ArrayList<UserGroup>();
 		try{
 			con = DBConnect.getConnection();
-			String query = "DELETE FROM Event WHERE EventID = ?";
+			con.setAutoCommit(false);
+			String query = "SELECT * FROM Attends WHERE EventID = ? AND (Attends = ? OR Attends = ?)";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			prep.setInt(2, 1);
+			prep.setInt(3, 0);
+			ResultSet result = prep.executeQuery();
+			while (result.next()) {
+				int userGroupID = result.getInt("UserGroupID");
+				ugs.add(new UserGroup(userGroupID, null, null));
+			}
+			result.close();
+			
+			System.out.println("Deleting event...");
+			System.out.println("Deleting attendants...");
+			query = "DELETE FROM Attends WHERE EventID = ?";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, event.getEventID());
 			System.out.println(prep.toString());
 			prep.execute();
-			System.out.println("Executed");
+			
+		
+			System.out.println("Deleting Notifications...");
+			query = "DELETE FROM Notification WHERE EventID = ? ;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			System.out.println(prep);
+			prep.execute();
+			
+			System.out.println("Inserting into Notification...");
+			query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			prep.setInt(1, event.getEventID());
+			prep.setString(2, "Event deleted: " + event.getName());
+			prep.setInt(3, 1);
+			prep.setInt(4, 0);
+			prep.execute();
+			ResultSet keys = prep.getGeneratedKeys();
+			keys.next();
+			int generated_note_id = keys.getInt(1);
+
+			System.out.println("NoteID: " + generated_note_id);
+
+			System.out.println("Inserting into HasRead....");
+			query = "INSERT INTO HasRead(UserGroupID, NoteID, HasRead) VALUES (?,?,?);";
+			prep = con.prepareStatement(query);
+			for (UserGroup ug : ugs) {
+				prep.setInt(1, ug.getUserGroupID());
+				prep.setInt(2, generated_note_id);
+				prep.setInt(3, 0);
+				prep.addBatch();
+			}
+			prep.executeBatch();
+			System.out.println("Complete");
+			
+
+			con.commit();
 			prep.close();
 			con.close();
 		} catch(SQLException e){
