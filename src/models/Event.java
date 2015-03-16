@@ -24,6 +24,7 @@ public class Event implements Serializable{
         this.from = from;
         this.to = to;
         this.cal = cal;
+        this.attends = -1;
     }
     
     public Event(int EventID, String name, String note, ArrayList<UserGroup> participants, LocalDateTime from, LocalDateTime to, Calendar cal, int attends) {
@@ -103,10 +104,9 @@ public class Event implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Event [EventID=" + EventID + ", name=" + name + ", note="
-				+ note + ", participants=" + participants + ", from=" + from
-				+ ", to=" + to + ", cal=" + cal +" ]";
+		return "Event [EventID=" + EventID + ", cal=" + cal + ", name=" + name
+				+ ", note=" + note + ", participants=" + participants
+				+ ", from=" + from + ", to=" + to + ", attends=" + attends
+				+ "]";
 	}
-
-	
 }
