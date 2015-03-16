@@ -541,7 +541,7 @@ public class EventQueries {
 				query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 				prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 				prep.setInt(1, event.getEventID());
-				prep.setString(2, "Event: " + event.getName() + " was updated");
+				prep.setString(2, event.getName() + " was updated");
 				prep.setInt(3, sender.getUserGroupID());
 				prep.setInt(4, 0);
 				prep.addBatch();
