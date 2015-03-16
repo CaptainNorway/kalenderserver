@@ -103,6 +103,9 @@ public class RequestHandler {
             	UserGroup ug5 = readUserGroup();
                 o = EventQueries.getEvents(cals2,ug5);
                 break;
+            case "getEvents-calendar":
+                o = EventQueries.getEvents(readCalendar());
+                break;
             case "createEvent-event":
                 o = EventQueries.createEvent(readEvent());
                 break;

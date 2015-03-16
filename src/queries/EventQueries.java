@@ -79,6 +79,42 @@ public class EventQueries {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get all the events for one calendar.
+	 * @param cal
+	 */
+	public static ArrayList<Event> getEvents(Calendar cal){
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ArrayList<Event> events = new ArrayList<>();
+		try {
+			conn = DBConnect.getConnection();
+			conn.setAutoCommit(false);
+			String query = "SELECT DISTINCT * FROM Event NATURAL JOIN CalendarEvent WHERE CalendarID = ? ";
+			pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, cal.getCalendarID());
+			ResultSet result = pstmt.executeQuery();
+			while (result.next()) {
+				int eventID = result.getInt("EventID");
+				int calendarID = result.getInt("CalendarID");
+				String eventName = result.getString("EventName");
+				String eventNote = result.getString("EventNote");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+				LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
+				LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
+				Calendar calendar = new Calendar (calendarID, null, null);
+				events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar));
+			}
+			result.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e){
+			System.out.println(e);
+		}
+		return events;
+
+	}
 
 	/**
 	 * Creates an Event with the given name.
@@ -268,6 +304,7 @@ public class EventQueries {
 		PreparedStatement prep;
 		try {
 			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
 			System.out.println("------ Edit Event ------");
 			ArrayList<UserGroup> participants = event.getParticipants();
 			ArrayList<UserGroup> participants2 = new ArrayList<>();
@@ -410,6 +447,32 @@ public class EventQueries {
 					}
 				}
 				prep.executeBatch();
+				
+				System.out.println("Inserting into Notification...");
+				query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
+				prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+				prep.setInt(1, event.getEventID());
+				prep.setString(2, "You have been removed from the event: " + event.getName());
+				prep.setInt(3, sender.getUserGroupID());
+				prep.setInt(4, 0);
+				prep.addBatch();
+				prep.executeBatch();
+				ResultSet keys = prep.getGeneratedKeys();
+				keys.next();
+				int generated_note_id = keys.getInt(1);
+
+				System.out.println("NoteID: " + generated_note_id);
+
+				System.out.println("Inserting into HasRead....");
+				query = "INSERT INTO HasRead(UserGroupID, NoteID, HasRead) VALUES (?,?,?);";
+				prep = con.prepareStatement(query);
+				for (Integer i : deleted_participants_id) {
+					prep.setInt(1, i);
+					prep.setInt(2, generated_note_id);
+					prep.setInt(3, 0);
+					prep.addBatch();
+				}
+				prep.executeBatch();
 				System.out.println("Complete");
 			}
 			System.out.println("--- Notification to exsisting users ---");
@@ -426,7 +489,7 @@ public class EventQueries {
 				query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 				prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 				prep.setInt(1, event.getEventID());
-				prep.setString(2, "Event: " + event.getName() + ", was updated");
+				prep.setString(2, "Event: " + event.getName() + " was updated");
 				prep.setInt(3, sender.getUserGroupID());
 				prep.setInt(4, 0);
 				prep.addBatch();
