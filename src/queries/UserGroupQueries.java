@@ -69,8 +69,8 @@ public class UserGroupQueries {
 			String query = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?)";
 			prep = con.prepareStatement(query);			
 			for(Person person : users.getUsers()){
-				prep.setInt(0, person.getPersonID());
-				prep.setInt(1, users.getUserGroupID());
+				prep.setInt(1, person.getPersonID());
+				prep.setInt(2, users.getUserGroupID());
 				prep.addBatch();
 			}
 			int[] updateCounts = prep.executeBatch();
@@ -83,7 +83,7 @@ public class UserGroupQueries {
 	
 	/**
 	 * Get all UserGroups that spesified calendars, checks calendarID (Given calendars must have a valid ID)
-	 * @param cal
+	 * @param cals
 	 * @return
 	 */
 	public static ArrayList<UserGroup> getUserGroups(ArrayList<Calendar> cals){
@@ -133,7 +133,7 @@ public class UserGroupQueries {
 		}
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT DISTINCT Person.PersonID, Person.Name, Person.Username, Person.Flag"
+			String query = "SELECT DISTINCT Person.PersonID, Person.Name, Person.Username, Person.Flag "
 					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
 					+ "WHERE ";
 			for(int i=0; i<usersList.size();i++){
@@ -146,7 +146,8 @@ public class UserGroupQueries {
 			for(int i=0;i<usersList.size();i++){
 				prep.setInt(i+1, usersList.get(i).getUserGroupID());
 			}
-			rs = prep.executeQuery();
+            System.out.println(prep);
+            rs = prep.executeQuery();
 			while(rs.next()){
 				persons.add(new Person(rs.getInt("PersonID"), rs.getString("Username"), rs.getString("Name"), rs.getString("Flag")));
 			}
@@ -423,74 +424,4 @@ public class UserGroupQueries {
 		}
 		return userGroup;
 	}
-	
-    /**
-     HER NEDENFOR ER TO FUNKSJONER SOM FUNKER MED HVERANDRE, de er svært like to funksjoner som er over disse.
-     Fint om alle som leser dette følger syntaksen nedenfor, altså, utfyllende navn a la: PreparedStatement preparedStatement
-     ResultSet resultSet, osv ... husk å close alle ting, statements, resultsets og connections osv. 
-     */
-
-//    /**
-//     * Get all distinct persons in given UserGroup, checks specified UserGroupID
-//     * @param UserGroupID
-//     * @return ArrayList<Person>
-//     */
-//    public static ArrayList<Person> getPersonsInUserGroup(int UserGroupID) {
-//        ArrayList<Person> users = new ArrayList<>(); // users/persons/members
-//        try{
-//            Connection con = DBConnect.getConnection();
-//            String sqlQuery = "SELECT DISTINCT Person.PersonID, Person.Username, Person.Password, Person.Name "
-//                    + "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
-//                    + "WHERE UserGroupID = " + UserGroupID + "";
-//
-//            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//
-//            while(resultSet.next()) {
-//                int PersonID = resultSet.getInt("PersonID");
-//                String Username = resultSet.getString("Username");
-//                String Password = resultSet.getString("Password");
-//                String Name = resultSet.getString("Name");
-//                users.add(new Person(PersonID, Username, null, Name));
-//            }
-//            resultSet.close();
-//            preparedStatement.close();
-//            con.close();
-//            return users;
-//        }
-//        catch(SQLException e){
-//            throw new IllegalArgumentException(e);
-//        }
-//    }
-//
-//    /**
-//     * Returns all UserGroup(s) a specified person belongs to.
-//     * @param person
-//     * @return ArrayList<UserGroup>
-//     */
-//    public static ArrayList<UserGroup> getUserGroups(Person person){
-//        ArrayList<UserGroup> userGroups = new ArrayList<>();
-//        try{
-//            Connection con = DBConnect.getConnection();
-//            String sqlQuery = "SELECT UserGroup.UserGroupID , UserGroup.GroupName "
-//                    + "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
-//                    + "WHERE PersonID = " + person.getPersonID() + "";
-//
-//            PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//
-//            while(resultSet.next()){
-//                int UserGroupID = resultSet.getInt("UserGroupID");
-//                String GroupName = resultSet.getString("GroupName");
-//                userGroups.add(new UserGroup(UserGroupID, GroupName, getPersonsInUserGroup(UserGroupID)));
-//            }
-//            resultSet.close();
-//            preparedStatement.close();
-//            con.close();
-//            return userGroups;
-//        }
-//        catch( SQLException e){
-//            throw new IllegalArgumentException(e);
-//        }
-//    }
 }
