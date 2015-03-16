@@ -150,18 +150,4 @@ public static void setRead(Notification notification, UserGroup ug){
 		System.out.println("Failed to set HasRead=1");
 	}
 	}
-	
-//	public static void main(String[] args){
-//	Person p = new Person(1, "Sondre", "D", "Sondre");
-//	Notification n = new Notification(2, null, null, null, null);
-////	NotificationQueries.setRead(n, p);
-//	System.out.println("+" + NotificationQueries.getNotifications(p));
-//	}
-/*
-	public static void main(String[] args) {
-		Event e = new Event(2, "Spise kake", null, null, null, new Calendar(2, "Yolo", null));
-		UserGroup ug = new UserGroup(1,"Sondre Hjetland", null);
-		Notification n = new Notification(0, "Husk å slå ned noen.", ug, null, e);
-		setNotification(n);
-	}*/
 }

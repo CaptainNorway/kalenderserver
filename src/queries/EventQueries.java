@@ -573,32 +573,4 @@ public class EventQueries {
 		}
 
 	}
-
-	
-	
-	
-	public static void main(String[] args) {
-
-	//
-	//	Calendar cal = new Calendar(3, "Yolo", null);
-	//	Event ev = new Event(22, "Slå ned Sigurd", null, LocalDateTime.parse("2015-03-03T05:39:00"), LocalDateTime.parse("2015-03-03T05:41:00"), cal);
-//
-	//	createEvent(ev);
-	//
-	//
-	//	deleteEvent(ev);
-	//	editEvent(ev);
-//
-	//	UserGroup ug = new UserGroup(5, "Fellesprosjekt", null);
-	//	ArrayList<Calendar> cal3 = CalendarQueries.getCalendars(ug);
-	//	ArrayList<Event> events = getEvents(cal3);
-	//	for (Event event : events){
-	//		System.out.println(event.toString());
-	//	}
-	//	Event e = new Event(1, null, null, null, null, null, null);
-	//	Person p = new Person(null, null, 1);
-	//	updateAttends(e, p, 1);
-	//
-	//
-	//}
-}}
+}

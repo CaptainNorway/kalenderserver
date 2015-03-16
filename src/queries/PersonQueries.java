@@ -238,20 +238,4 @@ public class PersonQueries {
             return null;
         }
     }
-
-    public static void main(String[] agrs) {
-        //System.out.println(getSalt("Sondrehh").getSalt());
-        //createPerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
-        //deletePerson(new Person("Sondrehh", "1234", "Sondre Hjetland"));
-        //Scanner user_input = new Scanner(System.in);
-        //System.out.println("Username: ");
-        //String username = user_input.next();
-        //System.out.println("Password: ");
-        //String pass = user_input.next();
-        //System.out.println(authenticate(username, pass));
-       //final Random r = new SecureRandom();
-       //byte[] salt = new byte[32];
-       //r.nextBytes(salt);
-       //System.out.println(salt);
-    }
 }

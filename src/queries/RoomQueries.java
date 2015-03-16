@@ -157,27 +157,5 @@ public class RoomQueries {
 			System.out.println(e);
 		}
 	}
-	
-	
-    
-    public static void main(String[] args) {
-    	//LocalDateTime from = LocalDateTime.of(2015,3, 11, 20, 15);
-    	//LocalDateTime to= LocalDateTime.of(2015, 3, 11, 20, 15);
-    	//UserGroup ug = new UserGroup(1, null, null);
-    	//ArrayList<UserGroup> participants = new ArrayList<>();
-    	//participants.add(ug);
-    	//Event event = new Event(99, "kaffe", "Drikke 10 liter kaffe", participants, from, to, null);
-    	//
-    	//
-        //ArrayList<Room> rooms = getAvailableRooms(event);
-        //System.out.println("Printing a list of the room entries in the database table ROOM:");
-    	//for (Room room : rooms) {
-    	//	System.out.println(room);
-    	//}
-		
-		//updateLocation(new Event(116, null,null,null,null,null,null), new Room("Rommet til Nikolai", 0));
-		
-  }
-  
 }
 
