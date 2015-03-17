@@ -187,7 +187,7 @@ public class EventQueries {
 			ResultSet result = prep.executeQuery();
 			while (result.next()) {
 				int userGroupID = result.getInt("UserGroupID");
-				ugs.add(new UserGroup(userGroupID, null, null));
+				ugs.add(new UserGroup(userGroupID, null, null, 1));
 			}
 			result.close();
 			
@@ -269,7 +269,7 @@ public class EventQueries {
 			prep.setInt(3, attendant.getUserGroupID());
 			System.out.println(prep.toString());
 			prep.execute();
-			UserGroup ug = new UserGroup(attendant.getUserGroupID(), attendant.getName(), null);
+			UserGroup ug = new UserGroup(attendant.getUserGroupID(), attendant.getName(), null, 1);
 			ArrayList<Calendar> cals = CalendarQueries.getCalendars(ug);
 			int calID = -1;
 			for (Calendar cal : cals){

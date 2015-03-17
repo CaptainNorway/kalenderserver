@@ -7,11 +7,18 @@ public class UserGroup implements Serializable{
     private int userGroupID;
     private ArrayList<Person> users = new ArrayList<Person>();
     private String name;
+    private boolean isPrivate;
 
-    public UserGroup(int userGroupID, String name, ArrayList<Person> users) {
+    public UserGroup(int userGroupID, String name, ArrayList<Person> users, int isPrivate) {
         this.userGroupID = userGroupID;
         this.name = name;
         this.users = users;
+        if(isPrivate==1){
+        	this.isPrivate = true;        	
+        }
+        else{
+        	this.isPrivate = false;
+        }
     }
 
     public int getUserGroupID() {
@@ -46,4 +53,9 @@ public class UserGroup implements Serializable{
     public String toString() {
         return name;
     }
+    
+    public boolean isPrivate(){
+    	return isPrivate;
+    }
+    
 }
