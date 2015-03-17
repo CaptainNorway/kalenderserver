@@ -249,7 +249,7 @@ public class CalendarQueries {
         ArrayList<UserGroup> userGroups = new ArrayList<>();
         //Execute query
         try {
-            String sql = "SELECT uc.UserGroupID, u.GroupName\n"
+            String sql = "SELECT uc.UserGroupID, u.GroupName, u.Private\n"
                     + "FROM UserCalendar AS uc JOIN UserGroup AS u\n"
                     + "ON uc.UserGroupID = u.UserGroupID\n"
                     + "WHERE uc.CalendarID = ?";
