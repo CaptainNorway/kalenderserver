@@ -53,7 +53,7 @@ public static ArrayList<Notification> getNotifications(UserGroup person){
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 		while(rs.next()){
 			notifications.add(new Notification(rs.getInt("Notification.NoteID"), rs.getString("Note"), 
-			UserGroupQueries.getUserGroup(new UserGroup(rs.getInt("Notification.UserGroupID"), null, null)), 
+			UserGroupQueries.getUserGroup(new UserGroup(rs.getInt("Notification.UserGroupID"), null, null,0)), 
 			null, new Event(rs.getInt("EventID"), rs.getString("EventName"), rs.getString("EventNote"), null, 
 			LocalDateTime.parse(rs.getTimestamp("From").toString(), formatter), LocalDateTime.parse(rs.getTimestamp("To").toString(), formatter), null), rs.getInt("IsInvite")));
 		}

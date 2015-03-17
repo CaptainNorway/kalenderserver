@@ -44,13 +44,14 @@ public class UserGroupQueries {
 		ResultSet rs;
 		try{
 			con = DBConnect.getConnection();
-			String query = "INSERT INTO UserGroup(GroupName) VALUES(?)";
+			String query = "INSERT INTO UserGroup(GroupName, Private) VALUES(?,?)";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setString(1, name);
+			prep.setInt(2, 0);
 			prep.execute();
 			rs = prep.getGeneratedKeys();
 			rs.next();
-			return new UserGroup(rs.getInt(1), name, null);
+			return new UserGroup(rs.getInt("GroupName"), name, null, 0);
 		} catch(SQLException e){
 			e.printStackTrace();
 			return null;
@@ -108,7 +109,7 @@ public class UserGroupQueries {
 			}
 			rs = prep.executeQuery();
 			while(rs.next()){
-				userGroups.add(new UserGroup(rs.getInt("UserGroupID"),rs.getString("GroupName"),null));
+				userGroups.add(new UserGroup(rs.getInt("UserGroupID"),rs.getString("GroupName"),null, rs.getInt("Private")));
 			}
 			return userGroups;
 		}
@@ -233,7 +234,7 @@ public class UserGroupQueries {
 					//Gruppe finnes ikke, legg til i liste
 					userGroupIDs.add(new Wrapper(userGroupID));
 					ArrayList<Person> persons = new ArrayList<Person>();
-					UserGroup userGroup = new UserGroup(userGroupID, rs.getString("GroupName"), persons);
+					UserGroup userGroup = new UserGroup(userGroupID, rs.getString("GroupName"), persons, rs.getInt("Private"));
 					userGroups.add(userGroup);
 					userGroupIndex.number = userGroups.size()-1;
 				}
@@ -352,7 +353,7 @@ public class UserGroupQueries {
             while (result.next()) {
                 int userGroupID = result.getInt("UserGroupID");
                 String groupName= result.getString("GroupName");
-                ug.add(new UserGroup(userGroupID, groupName, null));
+                ug.add(new UserGroup(userGroupID, groupName, null, result.getInt("Private")));
             }
             result.close();
             prep.close();
@@ -380,7 +381,7 @@ public class UserGroupQueries {
 			while(rs.next()){
 				int ugID = rs.getInt("UserGroupID");
 				String groupName = rs.getString("GroupName");
-				userGroup = new UserGroup(ugID, groupName, null);
+				userGroup = new UserGroup(ugID, groupName, null, rs.getInt("Private"));
 			}
 			rs.close();
 			prep.close();
@@ -412,7 +413,7 @@ public class UserGroupQueries {
 			while(rs.next()){
 				int ugID = rs.getInt("UserGroupID");
 				String groupName = rs.getString("GroupName");
-				userGroup = new UserGroup(ugID, groupName, null);
+				userGroup = new UserGroup(ugID, groupName, null, rs.getInt("Private"));
 			}
 			rs.close();
 			prep.close();

@@ -74,6 +74,9 @@ public class RequestHandler {
                 break;
 
             // Calendar
+            case "getCalendars-person":
+                o = CalendarQueries.getCalendars(readPerson());
+                break;
             case "getCalendars-usergroup":
                 o = CalendarQueries.getCalendars(readUserGroup());
                 break;

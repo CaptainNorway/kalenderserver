@@ -3,6 +3,7 @@ package queries;
 //yolo
 import database.DBConnect;
 import models.Calendar;
+import models.Person;
 import models.UserGroup;
 
 import java.sql.*;
@@ -135,7 +136,7 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
-
+    
     /**
      * Get all Calendars of a given UserGroup. userGroupID must exist and be valid.
      * @param userGroup
@@ -156,6 +157,51 @@ public class CalendarQueries {
             pstmt.setInt(1, userGroup.getUserGroupID());
             ResultSet rs = pstmt.executeQuery();
 
+            while (rs.next()) {
+                int CalendarID = rs.getInt("CalendarID");
+                String CalendarName = rs.getString("CalendarName");
+                calendars.add(new Calendar(CalendarID, CalendarName, getCalendarUserGroups(CalendarID, con)));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+            return calendars;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Get all Calendars that a Person can see, both personal usergroup and other subscribed usergroups.
+     * @param userGroup
+     * @return ArrayList<Calendar> 
+     */
+    public static ArrayList<Calendar> getCalendars(Person person) {
+        ArrayList<Calendar> calendars = new ArrayList<>();
+        ArrayList<UserGroup> userGroups = new ArrayList<>();
+        Connection con = DBConnect.getConnection();
+        //Execute query
+        try {
+        	String sql = "SELECT * FROM PersonUserGroup WHERE PersonID = ? ";
+        	PreparedStatement pstmt = con.prepareStatement(sql);
+        	pstmt.setInt(1, person.getPersonID());
+        	ResultSet rs = pstmt.executeQuery();
+        	while (rs.next()){
+        		UserGroup ug = new UserGroup(rs.getInt("UserGroupID"), null, null, 1);
+        		userGroups.add(ug);
+        	}
+        	rs.close();
+        	
+            sql = "SELECT c.CalendarID, c.CalendarName FROM Calendar AS c JOIN UserCalendar AS uc ON c.CalendarID = uc.CalendarID WHERE uc.UserGroupID = ? ";
+            for (int i = 1; i < userGroups.size(); i++){
+            	sql += "OR uc.UserGroupID = ? ";
+            }
+            pstmt = con.prepareStatement(sql);
+            for (int i = 0; i < userGroups.size(); i++){
+            	pstmt.setInt(i+1, userGroups.get(i).getUserGroupID());
+            }
+            System.out.println(pstmt);
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 int CalendarID = rs.getInt("CalendarID");
                 String CalendarName = rs.getString("CalendarName");
@@ -215,7 +261,7 @@ public class CalendarQueries {
             while (rs.next()) {
                 int UserGroupID = rs.getInt("UserGroupID");
                 String UserGroupName = rs.getString("GroupName");
-                userGroups.add(new UserGroup(UserGroupID, UserGroupName, null));
+                userGroups.add(new UserGroup(UserGroupID, UserGroupName, null, rs.getInt("Private")));
             }
             rs.close();
             pstmt.close();
