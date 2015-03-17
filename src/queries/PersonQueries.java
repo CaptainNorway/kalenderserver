@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -44,6 +45,36 @@ public class PersonQueries {
             con.close();
 
             return new Person(personID, username, name, flag);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
+    public static ArrayList<Person> getAllPersons() {
+
+        String pass;
+        Connection con = DBConnect.getConnection();
+        ArrayList<Person> persons = new ArrayList<Person>();
+        //Execute query
+        try {
+            String sql = "SELECT * FROM Person;";
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+
+            ResultSet rs = pstmt.executeQuery();
+	        while(rs.next()){
+	            int personID = rs.getInt("PersonID");
+	            String username = rs.getString("Username");
+	            String name = rs.getString("Name");
+	            String flag = rs.getString("Flag");
+	            persons.add(new Person(personID, username,name,flag));
+	        }
+            
+            rs.close();
+            pstmt.close();
+            con.close();
+
+            return persons;
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }

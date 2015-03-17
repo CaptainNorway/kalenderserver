@@ -48,6 +48,9 @@ public class RequestHandler {
             case "getPersons-usergroup":
                 o = UserGroupQueries.getPersons(readUserGroups());
                 break;
+            case "getAllPersons":
+                o = PersonQueries.getAllPersons();
+                break;
             case "getUserGroups-calendar":
                 o = UserGroupQueries.getUserGroups(readCalendars());
                 break;
