@@ -204,7 +204,7 @@ public class UserGroupQueries {
 		ArrayList<UserGroup> userGroups = new ArrayList<UserGroup>();
 		try{
 			con = DBConnect.getConnection();
-			String query = "SELECT UserGroupID, PersonID, Username, Name, GroupName, Flag "
+			String query = "SELECT UserGroupID, PersonID, Username, Name, GroupName, Flag, Private "
 					+ "FROM UserGroup NATURAL JOIN PersonUserGroup NATURAL JOIN Person "
 					+ "WHERE EXISTS ( "
 					+ "SELECT UserGroupID "
