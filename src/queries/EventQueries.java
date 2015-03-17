@@ -199,6 +199,13 @@ public class EventQueries {
 			System.out.println(prep.toString());
 			prep.execute();
 			
+			System.out.println("Deleting the event from calendar...");
+			query = "DELETE FROM CalendarEvent WHERE EventID = ?";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getEventID());
+			System.out.println(prep.toString());
+			prep.execute();
+			
 		
 			System.out.println("Deleting Notifications...");
 			query = "DELETE FROM Notification WHERE EventID = ? ;";
