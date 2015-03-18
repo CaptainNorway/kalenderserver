@@ -215,35 +215,18 @@ public class EventQueries {
 			keys1.next();
 			int noteKey = keys1.getInt(1);
 			notification.setNoteID(noteKey);
-			
-			query = "SELECT UserGroupID FROM Attends WHERE EventID = ?;";
-			prep = con.prepareStatement(query);
-			prep.setInt(1, notification.getEvent().getEventID());
-			ResultSet result = prep.executeQuery();
-			ArrayList<Integer> personKeys = new ArrayList<Integer>();
-	        while (result.next()) {
-	            personKeys.add(result.getInt("UserGroupID"));
-	        }
-	        result.close();
 	        
 			query = "INSERT INTO HasRead(UserGroupID, NoteID, HasRead) VALUES (?,?,?);";
 			prep = con.prepareStatement(query);
-			for (int userID : personKeys){
-				prep.setInt(1, userID);
+			for (UserGroup user : event.getParticipants()){
+				prep.setInt(1, user.getUserGroupID());
 				prep.setInt(2, noteKey);
-				if(userID == notification.getSender().getUserGroupID()){
-					prep.setInt(3, 1);
-				}else{
-					prep.setInt(3, 0);
-				}
+				prep.setInt(3, 0);
 				prep.addBatch();
 			}
 			int[] updateCounts2 = prep.executeBatch();
 			checkUpdateCounts(updateCounts2);
 			con.commit();
-			
-			con.commit();
-
 			prep.close();
 			con.close();
 
