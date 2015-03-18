@@ -51,7 +51,7 @@ public class UserGroupQueries {
 			prep.execute();
 			rs = prep.getGeneratedKeys();
 			rs.next();
-			return new UserGroup(rs.getInt("GroupName"), name, null, 0);
+			return new UserGroup(rs.getInt(1), name, new ArrayList<Person>(), 0);
 		} catch(SQLException e){
 			e.printStackTrace();
 			return null;
