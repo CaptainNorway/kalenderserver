@@ -57,7 +57,6 @@ public class EventQueries {
 					String eventName = result.getString("EventName");
 					String eventNote = result.getString("EventNote");
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-					System.out.println(result.getTimestamp("From").toString());
 					LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
 					LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
 					int attends = result.getInt("Attends");

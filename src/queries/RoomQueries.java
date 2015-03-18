@@ -41,8 +41,7 @@ public class RoomQueries {
     }
 
     public static ArrayList<Room> getAvailableRooms(Event event){
-    	ArrayList<Room> availableRooms = new ArrayList();
-    	int eventID = event.getEventID();
+    	ArrayList<Room> availableRooms = new ArrayList<Room>();
     	try{
     		Connection con = DBConnect.getConnection();
     		String sqlQuery = "SELECT * "
