@@ -200,13 +200,12 @@ public class EventQueries {
 			prep.execute();
 			
 			System.out.println("Deleting the event from calendar...");
-			query = "DELETE FROM CalendarEvent WHERE EventID = ?";
+			query = "DELETE FROM Event WHERE EventID = ?";
 			prep = con.prepareStatement(query);
 			prep.setInt(1, event.getEventID());
 			System.out.println(prep.toString());
 			prep.execute();
 			
-		
 			System.out.println("Deleting Notifications...");
 			query = "DELETE FROM Notification WHERE EventID = ? ;";
 			prep = con.prepareStatement(query);
@@ -217,7 +216,7 @@ public class EventQueries {
 			System.out.println("Inserting into Notification...");
 			query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			prep.setInt(1, event.getEventID());
+			prep.setInt(1, 1);
 			prep.setString(2, "Event deleted: " + event.getName());
 			prep.setInt(3, 1);
 			prep.setInt(4, 0);
