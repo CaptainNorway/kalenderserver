@@ -35,12 +35,12 @@ public class EventQueries {
 			try {
 				conn = DBConnect.getConnection();
 				conn.setAutoCommit(false);
-				String query = "SELECT DISTINCT * FROM Calendar NATURAL JOIN CalendarEvent NATURAL JOIN Event NATURAL JOIN Attends WHERE ";
+				String query = "SELECT DISTINCT * FROM Calendar NATURAL JOIN CalendarEvent NATURAL JOIN Event NATURAL JOIN Attends JOIN UserCalendar ON Calendar.CalendarID = UserCalendar.CalendarID WHERE ";
 				for (int i = 0; i< cal.size(); i++) {
 					if (i != 0){
 						query += "OR ";
 					}
-					query = query + "(CalendarID = ? AND UserGroupID = ? )";
+					query = query + "(Calendar.CalendarID = ? AND Attends.UserGroupID = ? )";
 				}
 				pstmt = conn.prepareStatement(query);
 				for (int i = 0; i/2 < cal.size(); i+=2) {
@@ -51,8 +51,9 @@ public class EventQueries {
 				ResultSet result = pstmt.executeQuery();
 				while (result.next()) {
 					int eventID = result.getInt("EventID");
-					int calendarID = result.getInt("CalendarID");
+					int calendarID = result.getInt("Calendar.CalendarID");
 					String calendarName = result.getString("CalendarName");
+					int userGroupID = result.getInt("UserCalendar.UserGroupID");
 					String eventName = result.getString("EventName");
 					String eventNote = result.getString("EventNote");
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -60,13 +61,14 @@ public class EventQueries {
 					LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
 					LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
 					int attends = result.getInt("Attends");
+					
+					ArrayList<UserGroup> ugs = new ArrayList<>();
+					ugs.add(new UserGroup(userGroupID, null, null, -1));
 
-					ArrayList<Calendar> templist = new ArrayList<>();
-					templist.add(new Calendar(calendarID, null, null));
-
-					Calendar calendar = new Calendar (calendarID, calendarName, null);
+					Calendar calendar = new Calendar (calendarID, calendarName, ugs);
 					events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar, attends));
 				}
+				
 				result.close();
 				pstmt.close();
 				conn.close();
@@ -229,7 +231,6 @@ public class EventQueries {
 			con.commit();
 			prep.close();
 			con.close();
-
 			return event;
 		} catch(SQLException e){
 			System.out.println(e);
