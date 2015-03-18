@@ -168,6 +168,93 @@ public class EventQueries {
 		}
 	}
 	
+	public static Event createGroupEvent(Event event){
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			con.setAutoCommit(false);
+
+			String query = "INSERT INTO `Event`(`EventName`, `EventNote`, `From`, `To`) VALUES (?, ?, ?, ?);";
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			prep.setString(1, event.getName());
+			prep.setString(2, event.getNote());
+			prep.setString(3, event.getFrom().toString());
+			prep.setString(4, event.getTo().toString());
+			prep.executeUpdate();
+			ResultSet keys = prep.getGeneratedKeys();
+			keys.next();
+			int key = keys.getInt(1);
+			event.setEventID(key);
+
+			query = "INSERT INTO CalendarEvent(CalendarID, EventID) SELECT ?, LAST_INSERT_ID();";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, event.getCal().getCalendarID());
+			prep.executeUpdate();
+			
+			query = "INSERT INTO Attends(UserGroupID, EventID, Attends) VALUES (?,?,?);";
+			prep = con.prepareStatement(query);
+			for (UserGroup ug : event.getParticipants()){
+				prep.setInt(1, ug.getUserGroupID());
+				prep.setInt(2, event.getEventID());
+				prep.setInt(3, 1);
+				prep.addBatch();
+			}
+			int[] updateCounts = prep.executeBatch();
+			checkUpdateCounts(updateCounts);
+			
+			Notification notification = new Notification(0, event.getName() + " created in " + event.getCal().getName(), new UserGroup(1, "System", null, 0), event.getParticipants(), event, 0);
+			query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
+			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			prep.setInt(1, notification.getEvent().getEventID());
+			prep.setString(2, notification.getNote());
+			prep.setInt(3, notification.getSender().getUserGroupID());
+			prep.setInt(4, notification.isInvite());
+			prep.executeUpdate();
+			ResultSet keys1 = prep.getGeneratedKeys();
+			keys1.next();
+			int noteKey = keys1.getInt(1);
+			notification.setNoteID(noteKey);
+			
+			query = "SELECT UserGroupID FROM Attends WHERE EventID = ?;";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, notification.getEvent().getEventID());
+			ResultSet result = prep.executeQuery();
+			ArrayList<Integer> personKeys = new ArrayList<Integer>();
+	        while (result.next()) {
+	            personKeys.add(result.getInt("UserGroupID"));
+	        }
+	        result.close();
+	        
+			query = "INSERT INTO HasRead(UserGroupID, NoteID, HasRead) VALUES (?,?,?);";
+			prep = con.prepareStatement(query);
+			for (int userID : personKeys){
+				prep.setInt(1, userID);
+				prep.setInt(2, noteKey);
+				if(userID == notification.getSender().getUserGroupID()){
+					prep.setInt(3, 1);
+				}else{
+					prep.setInt(3, 0);
+				}
+				prep.addBatch();
+			}
+			int[] updateCounts2 = prep.executeBatch();
+			checkUpdateCounts(updateCounts2);
+			con.commit();
+			
+			con.commit();
+
+			prep.close();
+			con.close();
+
+			return event;
+		} catch(SQLException e){
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * Delete an event.
 	 * @param event
