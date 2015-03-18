@@ -221,13 +221,18 @@ public class CalendarQueries {
         Connection con = DBConnect.getConnection();
         //Execute query
         try {
-            String sql = "SELECT * FROM Calendar";
+            String sql = "SELECT * FROM Calendar NATURAL JOIN UserCalendar NATURAL JOIN UserGroup";
             PreparedStatement pstmt = con.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 int CalendarID = rs.getInt("CalendarID");
                 String CalendarName = rs.getString("CalendarName");
-                calendars.add(new Calendar(CalendarID, CalendarName, null));
+                int userGroupId = rs.getInt("UserGroupID");
+                String groupName = rs.getString("GroupName");
+                int isPrivate = rs.getInt("Private");
+                ArrayList<UserGroup> ugs = new ArrayList<UserGroup>();
+                ugs.add(new UserGroup(userGroupId, groupName, null, isPrivate));
+                calendars.add(new Calendar(CalendarID, CalendarName, ugs));
             }
             rs.close();
             pstmt.close();
