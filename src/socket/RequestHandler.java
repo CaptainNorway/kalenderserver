@@ -135,6 +135,11 @@ public class RequestHandler {
                 Attendant attendant = readAttendant();
                 EventQueries.updateAttends(event2, attendant);
                 break;
+            case "updateAttendsPersonalEvent-event-attendant":
+                Event event6 = readEvent();
+                Attendant attendant2 = readAttendant();
+                EventQueries.updateAttends(event6, attendant2);
+                break;
             case "setAttends-event-attendants":
                 Event event4 = readEvent();
                 ArrayList<UserGroup> ug2 = readUserGroups();

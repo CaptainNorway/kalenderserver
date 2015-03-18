@@ -323,7 +323,7 @@ public class EventQueries {
 	 * Update attendants.
 	 * @param event
 	 */
-	public static void updateAttends(Event event, Attendant attendant){
+	public static void updateAttendsPersonalEvent(Event event, Attendant attendant){
 
 		/* status: 0 = no response, 1 = Attends, 2 = Not attending*/
 		Connection con = null;
@@ -358,6 +358,29 @@ public class EventQueries {
 				prep.setInt(4, attendant.getUserGroupID());
 				prep.execute();
 			}
+			prep.close();
+			con.close();
+		} catch(SQLException e){
+			System.out.println(e);
+		}
+	}
+	
+	public static void updateAttends(Event event, Attendant attendant){
+
+		/* status: 0 = no response, 1 = Attends, 2 = Not attending*/
+		Connection con = null;
+		PreparedStatement prep;
+		try{
+			con = DBConnect.getConnection();
+			String query = "UPDATE `Attends` "
+					+ "SET `Attends` = ? "
+					+ "WHERE `EventID` = ? AND `UserGroupID` = ?";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, attendant.getStatus());
+			prep.setInt(2, event.getEventID());
+			prep.setInt(3, attendant.getUserGroupID());
+			System.out.println(prep.toString());
+			prep.execute();
 			prep.close();
 			con.close();
 		} catch(SQLException e){
