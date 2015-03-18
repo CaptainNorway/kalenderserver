@@ -293,20 +293,10 @@ public class UserGroupQueries {
 			con = DBConnect.getConnection();
 			con.setAutoCommit(false);
 			String query = "DELETE FROM PersonUserGroup "
-					+ "WHERE UserGroupID = ? AND ( ";
-			for(int i=0;i<userGroup.getUsers().size(); i++){
-				if(i!=0){
-					query += " OR ";
-				}
-				query += "PersonID = ? ";
-			}
-			query += ");";
+					+ "WHERE UserGroupID = ? ;";
 			prep = con.prepareStatement(query);
-			prep.setInt(1, userGroup.getUserGroupID());
 			
-			for(int i=0; i<userGroup.getUsers().size(); i++){
-				prep.setInt(i+2, userGroup.getUsers().get(i).getPersonID());
-			}
+			prep.setInt(1, userGroup.getUserGroupID());
 			
 			prep.execute();
 			String query2 = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?) ";

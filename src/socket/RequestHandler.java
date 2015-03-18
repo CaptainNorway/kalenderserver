@@ -40,6 +40,9 @@ public class RequestHandler {
 		switch (command.command) {
 
             // UserGroups
+			case "editUserGroup-usergroup":
+				UserGroupQueries.editUserGroup(readUserGroup());
+				break;
             case "getUserGroups-person":
                 System.out.println("Going to read person:");
                 o = UserGroupQueries.getUserGroups(readPerson());
