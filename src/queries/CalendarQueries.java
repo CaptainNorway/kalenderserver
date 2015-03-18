@@ -270,4 +270,43 @@ public class CalendarQueries {
             throw new IllegalArgumentException(e);
         }
     }
+
+	public static ArrayList<UserGroup> getUserGroupsInCalendar(Calendar calendar) {
+		ArrayList<UserGroup> userGroups = new ArrayList<>();
+		ArrayList<Person> persons = new ArrayList<>();
+		Connection con = DBConnect.getConnection();
+        //Execute query
+        try {
+            String sql = "SELECT * FROM PersonUserGroup WHERE UserGroupID = ? ";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, calendar.getUserGroups().get(0).getUserGroupID());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                persons.add(new Person(rs.getInt("PersonID"), null, null, null));
+            }
+            rs.close();
+            pstmt.close();
+            
+            sql = "SELECT * FROM UserGroup NATURAL JOIN PersonUserGroup WHERE (PersonID = ? AND Private = ? ) ";
+            for (int i = 1; i < persons.size(); i++){
+            	sql += "OR (PersonID = ? AND Private = ? ) ";
+            }
+            pstmt = con.prepareStatement(sql);
+            for (int i = 0; i/2 < persons.size(); i+=2){
+            	pstmt.setInt(i+1, persons.get(i/2).getPersonID());
+            	pstmt.setInt(i+2, 1);
+            }
+            System.out.println(pstmt);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int userGroupID = rs.getInt("UserGroupID");
+                String userGroupName = rs.getString("GroupName");
+                userGroups.add(new UserGroup(userGroupID, userGroupName, null, 1));
+            }            		
+            return userGroups;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+	}
 }

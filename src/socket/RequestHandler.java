@@ -105,6 +105,9 @@ public class RequestHandler {
             case "deleteCalendar-calendar":
                 CalendarQueries.deleteCalendar(readCalendar());
                 break;
+            case "getUserGroupsInCalendar-calendar":
+            	o = CalendarQueries.getUserGroupsInCalendar(readCalendar());
+            	break;
 
             // Event
             case "getEvents-calendars-usergroup":
