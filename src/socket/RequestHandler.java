@@ -138,7 +138,7 @@ public class RequestHandler {
             case "updateAttendsPersonalEvent-event-attendant":
                 Event event6 = readEvent();
                 Attendant attendant2 = readAttendant();
-                EventQueries.updateAttends(event6, attendant2);
+                EventQueries.updateAttendsPersonalEvent(event6, attendant2);
                 break;
             case "setAttends-event-attendants":
                 Event event4 = readEvent();
