@@ -104,7 +104,9 @@ public class EventQueries {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 				LocalDateTime from = LocalDateTime.parse(result.getTimestamp("From").toString(), formatter);
 				LocalDateTime to = LocalDateTime.parse(result.getTimestamp("To").toString(), formatter);
-				Calendar calendar = new Calendar (calendarID, null, null);
+				ArrayList<UserGroup> ugs = new ArrayList<>();
+				ugs.add(new UserGroup(0, null, null, -1));
+				Calendar calendar = new Calendar (calendarID, null,ugs);
 				events.add(new Event(eventID, eventName, eventNote, null, from, to, calendar,-1));
 			}
 			result.close();
