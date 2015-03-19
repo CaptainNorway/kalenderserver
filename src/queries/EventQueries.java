@@ -206,7 +206,7 @@ public class EventQueries {
 			int[] updateCounts = prep.executeBatch();
 			checkUpdateCounts(updateCounts);
 			
-			Notification notification = new Notification(0, event.getName() + " created in " + event.getCal().getName(), new UserGroup(1, "System", null, 0), event.getParticipants(), event, 0);
+			Notification notification = new Notification(0, "Event '" + event.getName() + "' was created in calendar '" + event.getCal().getName() +"'", new UserGroup(1, "System", null, 0), event.getParticipants(), event, 0);
 			query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setInt(1, notification.getEvent().getEventID());
@@ -289,7 +289,7 @@ public class EventQueries {
 			query = "INSERT INTO Notification(EventID, Note, UserGroupID, IsInvite) VALUES (?,?,?,?);";
 			prep = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			prep.setInt(1, 1);
-			prep.setString(2, "Event deleted: " + event.getName());
+			prep.setString(2, "Event '" + event.getName() + "' was deleted from calendar '" + event.getCal().getName() + "'");
 			prep.setInt(3, 1);
 			prep.setInt(4, 0);
 			prep.execute();
