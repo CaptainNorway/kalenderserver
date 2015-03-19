@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import database.DBConnect;
 import models.Calendar;
@@ -25,9 +26,9 @@ public class UserGroupQueries {
 	private static void checkUpdateCounts(int[] updateCounts) {
         for (int i = 0; i < updateCounts.length; i++) {
             if (updateCounts[i] >= 0) {
-                System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
+                //System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
             } else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
-                System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
+                //System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
             } else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
                 System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
             }
@@ -289,6 +290,8 @@ public class UserGroupQueries {
 	public static void editUserGroup(UserGroup userGroup){
 		Connection con = null;
 		PreparedStatement prep;
+		ArrayList<UserGroup> addedUserGroups = new ArrayList<UserGroup>();
+		ArrayList<Event> allCalendarsEvents = new ArrayList<Event>();
 		try{
 			con = DBConnect.getConnection();
 			con.setAutoCommit(false);
@@ -317,6 +320,68 @@ public class UserGroupQueries {
 			prep.setString(1, userGroup.getName());
 			prep.setInt(2, userGroup.getUserGroupID());
 			prep.executeUpdate();
+			
+			/* Trengte ikke denne likevel tror jeg, heklet den inn i INSERT statementet.
+			query = "SELECT DISTINCT * FROM PersonUserGroup NATURAL JOIN UserGroup WHERE ";
+			for(int i = 0; i < userGroup.getUsers().size(); i++){
+				if (i == 0){
+					query += "(Private = ? AND PersonID = ? ) ";
+				}else{
+					query += "OR (Private = ? AND PersonID = ? ) ";
+				}
+			}
+			prep = con.prepareStatement(query);
+			for (int i = 0; i < userGroup.getUsers().size(); i++){
+				prep.setInt(2*i+1, 1);
+				prep.setInt(2*i+2, userGroup.getUsers().get(i).getPersonID());
+			}
+			System.out.println(prep);
+			ResultSet result = prep.executeQuery();
+			while (result.next()) {
+				int userGroupID = result.getInt("UserGroupID");
+				String groupName = result.getString("GroupName");
+				addedUserGroups.add(new UserGroup(userGroupID, groupName, null, 1));
+			}
+			result.close();*/
+			
+			query = "SELECT * FROM UserGroup " +
+					"NATURAL JOIN UserCalendar "+
+					"NATURAL JOIN Calendar "+
+					"NATURAL JOIN CalendarEvent "+
+					"NATURAL JOIN Event "+
+					"WHERE UserGroupID = ?";
+			prep = con.prepareStatement(query);
+			prep.setInt(1, userGroup.getUserGroupID());
+			System.out.println(prep);
+			ResultSet result = prep.executeQuery();
+			while (result.next()) {
+				int eventID = result.getInt("eventID");
+				int calendarID = result.getInt("calendarID");
+				String calendarName = result.getString("CalendarName");
+				String eventName = result.getString("EventName");
+				String eventNote = result.getString("EventNote");
+				allCalendarsEvents.add(new Event(eventID, eventName, eventNote, null, null, null, new Calendar(calendarID, calendarName, new ArrayList<UserGroup>(Arrays.asList(userGroup)))));
+			}
+			result.close();
+			
+			query = "INSERT INTO Attends(UserGroupID, EventID, Attends) "
+					+ "SELECT DISTINCT UserGroupID, ?, ? "
+					+ "FROM PersonUserGroup NATURAL JOIN UserGroup "
+					+ "WHERE PersonID = ? AND Private = ? "
+					+ "ON DUPLICATE KEY UPDATE Attends.UserGroupID = Attends.UserGroupID";
+			prep = con.prepareStatement(query);
+			for(Event event : allCalendarsEvents){
+				for (Person person : userGroup.getUsers()){
+					prep.setInt(1, event.getEventID());
+					prep.setInt(2, 0);
+					prep.setInt(3, person.getPersonID());
+					prep.setInt(4, 1);
+					System.out.println(prep);
+					prep.addBatch();
+				}
+			}
+			int[] updateCounts = prep.executeBatch();
+			checkUpdateCounts(updateCounts);
 			con.commit();
 			prep.close();
 		    con.close();

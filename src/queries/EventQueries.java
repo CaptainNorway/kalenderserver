@@ -14,9 +14,9 @@ public class EventQueries {
 	public static void checkUpdateCounts(int[] updateCounts) {
 		for (int i = 0; i < updateCounts.length; i++) {
 			if (updateCounts[i] >= 0) {
-				System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
+				//System.out.println("Successfully executed; updateCount=" + updateCounts[i]);
 			} else if (updateCounts[i] == Statement.SUCCESS_NO_INFO) {
-				System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
+				//System.out.println("Successfully executed; updateCount=Statement.SUCCESS_NO_INFO");
 			} else if (updateCounts[i] == Statement.EXECUTE_FAILED) {
 				System.out.println("Failed to execute; updateCount=Statement.EXECUTE_FAILED");
 			}
@@ -338,7 +338,7 @@ public class EventQueries {
 			prep.setInt(1, attendant.getStatus());
 			prep.setInt(2, event.getEventID());
 			prep.setInt(3, attendant.getUserGroupID());
-			System.out.println(prep.toString());
+			System.out.println(prep);
 			prep.execute();
 			UserGroup ug = new UserGroup(attendant.getUserGroupID(), attendant.getName(), null, 1);
 			ArrayList<Calendar> cals = CalendarQueries.getCalendars(ug);
@@ -380,7 +380,7 @@ public class EventQueries {
 			prep.setInt(1, attendant.getStatus());
 			prep.setInt(2, event.getEventID());
 			prep.setInt(3, attendant.getUserGroupID());
-			System.out.println(prep.toString());
+			System.out.println(prep);
 			prep.execute();
 			prep.close();
 			con.close();
