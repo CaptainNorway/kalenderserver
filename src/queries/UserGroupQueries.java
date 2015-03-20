@@ -302,7 +302,7 @@ public class UserGroupQueries {
 			prep.setInt(1, userGroup.getUserGroupID());
 			
 			prep.execute();
-			String query2 = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?) ";
+			String query2 = "INSERT INTO PersonUserGroup(PersonID,UserGroupID) VALUES(?,?) ON DUPLICATE KEY UPDATE PersonUserGroup.PersonID = PersonUserGroup.PersonID";
 			prep = con.prepareStatement(query2);
 			for (Person person : userGroup.getUsers()){
 				prep.setInt(1, person.getPersonID());
