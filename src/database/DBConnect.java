@@ -1,9 +1,11 @@
 package database;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class DBConnect {
     public static DataSource getMySQLDataSource() {

@@ -1,16 +1,13 @@
 package queries;
 
-import database.DBConnect;
-import models.Person;
-
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+
+import models.Person;
+import database.DBConnect;
 
 /**
  * Created by sondrehj on 26.02.2015.

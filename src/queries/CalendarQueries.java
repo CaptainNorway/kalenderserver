@@ -1,13 +1,16 @@
 package queries;
 
 //yolo
-import database.DBConnect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 import models.Calendar;
 import models.Person;
 import models.UserGroup;
-
-import java.sql.*;
-import java.util.ArrayList;
+import database.DBConnect;
 
 public class CalendarQueries {
 

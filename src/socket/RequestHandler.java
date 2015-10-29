@@ -1,12 +1,5 @@
 package socket;
 
-import queries.CalendarQueries;
-import queries.EventQueries;
-import queries.NotificationQueries;
-import queries.PersonQueries;
-import queries.RoomQueries;
-import queries.UserGroupQueries;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -19,6 +12,12 @@ import models.Notification;
 import models.Person;
 import models.Room;
 import models.UserGroup;
+import queries.CalendarQueries;
+import queries.EventQueries;
+import queries.NotificationQueries;
+import queries.PersonQueries;
+import queries.RoomQueries;
+import queries.UserGroupQueries;
 
 public class RequestHandler {
 

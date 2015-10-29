@@ -1,8 +1,8 @@
 package models;
 
-import utilities.Password;
-
 import java.io.Serializable;
+
+import utilities.Password;
 
 public class Person implements Serializable {
     private int personID;

@@ -1,13 +1,20 @@
 package queries;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import models.Attendant;
+import models.Calendar;
+import models.Event;
+import models.Notification;
+import models.UserGroup;
 import database.DBConnect;
-import models.*;
-import queries.CalendarQueries;
 
 public class EventQueries {
 	

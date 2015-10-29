@@ -9,10 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import models.Calendar;
 import models.Event;
 import models.Notification;
-import models.Person;
 import models.UserGroup;
 import database.DBConnect;
 

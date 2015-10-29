@@ -1,18 +1,14 @@
 package queries;
 
-import database.DBConnect;
-import models.*;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 
-import queries.EventQueries;
+import models.Event;
+import models.Room;
+import database.DBConnect;
 
 public class RoomQueries {
 
